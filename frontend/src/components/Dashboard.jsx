@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
 import TaskList from './TaskList';
 import TaskForm from './TaskForm';
+import DayAssignee from './DayAssignee';
 import { API_URL } from '../config';
 
 const Dashboard = () => {
@@ -78,6 +78,7 @@ const Dashboard = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     <div className="lg:col-span-4 xl:col-span-3">
                         <div className="sticky top-8">
+                            <DayAssignee />
                             <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                                 <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
