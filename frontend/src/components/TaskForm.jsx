@@ -15,7 +15,7 @@ const TaskForm = ({ onTaskAdded }) => {
         };
 
         try {
-            const response = await fetch('http://localhost:3000/api/tasks', {
+            const response = await fetch('https://rutina-personal.onrender.com/api/tasks', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
