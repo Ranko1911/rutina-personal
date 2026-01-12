@@ -66,22 +66,51 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="container mx-auto p-4">
-            <h2 className="text-2xl font-bold mb-4">My Dashboard</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                    <h3 className="text-xl font-semibold mb-2">Add New Task</h3>
-                    <TaskForm onTaskAdded={handleTaskAdded} />
+        <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+                <div className="text-center mb-10">
+                    <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-2">
+                        Life Tracker
+                    </h2>
+                    <p className="text-gray-500 text-lg">Organize your routines and achieve your goals</p>
                 </div>
-                <div>
-                    <h3 className="text-xl font-semibold mb-2">My Tasks</h3>
-                    {loading ? <p>Loading...</p> : (
-                        <TaskList
-                            tasks={tasks}
-                            onToggleTask={handleToggleTask}
-                            onDeleteTask={handleDeleteTask}
-                        />
-                    )}
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <div className="lg:col-span-4 xl:col-span-3">
+                        <div className="sticky top-8">
+                            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                                <h3 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                                    </svg>
+                                    New Task
+                                </h3>
+                                <TaskForm onTaskAdded={handleTaskAdded} />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="lg:col-span-8 xl:col-span-9">
+                        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 min-h-[500px]">
+                            <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-b pb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                                </svg>
+                                My Tasks
+                            </h3>
+                            {loading ? (
+                                <div className="flex justify-center items-center h-64">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                                </div>
+                            ) : (
+                                <TaskList
+                                    tasks={tasks}
+                                    onToggleTask={handleToggleTask}
+                                    onDeleteTask={handleDeleteTask}
+                                />
+                            )}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
