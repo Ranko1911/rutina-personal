@@ -19,6 +19,10 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK', text: 'Personal Life Tracker API' });
 });
 
+app.get('/', (req, res) => {
+  res.send('¡El backend está funcionando correctamente!');
+});
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
