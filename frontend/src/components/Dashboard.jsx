@@ -8,7 +8,8 @@ const Dashboard = () => {
 
     const fetchTasks = async () => {
         try {
-            const response = await fetch('https://rutina-personal.onrender.com/api/tasks');
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+            const response = await fetch(`${API_URL}/api/tasks`);
             const data = await response.json();
             setTasks(data);
         } catch (error) {
