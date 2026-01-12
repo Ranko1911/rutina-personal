@@ -1,0 +1,104 @@
+================================================================================
+INFORME INICIAL DEL PROYECTO: PERSONAL LIFE TRACKER
+================================================================================
+
+1. RESUMEN EJECUTIVO
+--------------------------------------------------------------------------------
+El proyecto consiste en el desarrollo de una aplicación web de gestión de 
+productividad personal. El objetivo es permitir al usuario administrar tareas 
+con una lógica de recurrencia compleja (diaria, semanal, personalizada, puntual) 
+organadas mediante un sistema de categorías.
+
+El sistema se diseñará bajo una arquitectura de Cliente-Servidor desacoplada, 
+alojando el backend en Render y el frontend en GitHub Pages, cumpliendo 
+estrictamente con principios de diseño de software (SOLID, Clean Code) y 
+estándares de UX/UI.
+
+
+2. DEFINICIÓN DEL ALCANCE Y FUNCIONALIDADES
+--------------------------------------------------------------------------------
+
+2.1. Gestión de Tareas (Core)
+El sistema permitirá un CRUD completo (Crear, Leer, Actualizar, Borrar) con:
+  - Tareas Puntuales: De una sola vez (ej. "Ir al médico").
+  - Tareas Recurrentes Diarias.
+  - Tareas Recurrentes Semanales.
+  - Tareas Recurrentes Mensuales.
+  - Eventualidad Personalizada: (ej. "Cada 3 días", "Cada segundo martes").
+
+2.2. Sistema de Agrupación (Categorías)
+Las tareas estarán organizadas en contextos:
+  - Deporte / Ejercicio
+  - Videojuegos
+  - Master / Formación
+  - Carnet / Trámites
+  - (Capacidad de crear nuevas categorías personalizadas)
+
+2.3. Interactividad
+  - Dashboard interactivo con estado (Pendiente, Completado, Vencido).
+  - Feedback visual inmediato.
+  - Filtros por fecha, categoría y estado.
+
+
+3. ARQUITECTURA TÉCNICA Y STACK TECNOLÓGICO
+--------------------------------------------------------------------------------
+
+3.1. Frontend (Cliente)
+  - Alojamiento: GitHub Pages.
+  - Tecnología Sugerida: React.js (Recomendado) o Vue.js.
+  - Estilos: CSS Modules o Tailwind CSS (Responsive Design).
+  - Comunicación: Fetch API / Axios.
+
+3.2. Backend (Servidor)
+  - Alojamiento: Render (Web Service).
+  - Tecnología Sugerida: Node.js (Express) o Python (FastAPI).
+  - Tipo: REST API.
+
+3.3. Base de Datos
+  - Alojamiento: Render (PostgreSQL) o MongoDB Atlas.
+  - Persistencia: Relacional (SQL) recomendada para integridad de datos.
+
+
+4. ESTÁNDARES Y PRINCIPIOS DE DISEÑO
+--------------------------------------------------------------------------------
+
+4.1. Principios de Programación
+  - SOLID: Especialmente Principio de Responsabilidad Única.
+  - DRY (Don't Repeat Yourself): Abstracción de lógica.
+  - Clean Code: Nombres de variables claros y código auto-documentado.
+  - MVC: Separación de Modelos, Vistas (rutas/respuestas) y Controladores.
+
+4.2. Principios de Diseño Web (UI/UX)
+  - Mobile First: Diseño adaptable a móviles prioritariamente.
+  - Accesibilidad (a11y): HTML semántico y contraste de colores.
+  - Feedback: Indicadores de carga y notificaciones de éxito/error.
+
+
+5. ESTRUCTURA DE DATOS PRELIMINAR (EJEMPLO JSON)
+--------------------------------------------------------------------------------
+Entidad Tarea:
+{
+  "id": "uuid-1234",
+  "titulo": "Entrenar Pierna",
+  "descripcion": "Sentadillas y prensa",
+  "categoria_id": "cat-01",
+  "tipo_recurrencia": "semanal", 
+  "configuracion_recurrencia": {
+    "dias_semana": ["Lunes", "Jueves"]
+  },
+  "fecha_vencimiento": "2023-10-27T10:00:00Z",
+  "completada": false
+}
+
+
+6. HOJA DE RUTA (ROADMAP)
+--------------------------------------------------------------------------------
+1. Setup: Repositorio en GitHub, 'Hola Mundo' en Render y GH Pages.
+2. Backend Core: Base de datos y API para tareas.
+3. Frontend Base: Maquetación y conexión API.
+4. Lógica Avanzada: Algoritmo de recurrencia de fechas.
+5. Pulido: Mejoras de UI y refactorización.
+
+================================================================================
+FIN DEL INFORME
+================================================================================
