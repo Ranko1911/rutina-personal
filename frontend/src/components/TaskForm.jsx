@@ -35,54 +35,59 @@ const TaskForm = ({ onTaskAdded }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white p-4 shadow rounded-lg border border-gray-200">
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Title</label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+                <label className="block text-gray-700 text-sm font-semibold mb-1">Title</label>
                 <input
                     type="text"
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+                    placeholder="E.g., Morning Run"
                     required
                 />
             </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Description</label>
+            <div>
+                <label className="block text-gray-700 text-sm font-semibold mb-1">Description</label>
                 <input
                     type="text"
                     value={descripcion}
                     onChange={(e) => setDescripcion(e.target.value)}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder-gray-400"
+                    placeholder="Optional details..."
                 />
             </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Category</label>
+            <div>
+                <label className="block text-gray-700 text-sm font-semibold mb-1">Category</label>
                 <select
                     value={categoria}
                     onChange={(e) => setCategoria(e.target.value)}
-                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                 >
                     <option value="General">General</option>
-                    <option value="Health">Salud</option>
-                    <option value="Work">Trabajo</option>
-                    <option value="Home">Hogar</option>
-                    <option value="Leisure">Ocio</option>
+                    <option value="Health">🧘 Health</option>
+                    <option value="Work">💼 Work</option>
+                    <option value="Home">🏠 Home</option>
+                    <option value="Leisure">🎮 Leisure</option>
                 </select>
             </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">Recurrence</label>
+            <div>
+                <label className="block text-gray-700 text-sm font-semibold mb-1">Recurrence</label>
                 <select
                     value={tipoRecurrencia}
                     onChange={(e) => setTipoRecurrencia(e.target.value)}
-                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                 >
-                    <option value="puntual">Puntual</option>
-                    <option value="diaria">Diaria</option>
-                    <option value="semanal">Semanal</option>
-                    <option value="mensual">Mensual</option>
+                    <option value="puntual">One-time</option>
+                    <option value="diaria">Daily</option>
+                    <option value="semanal">Weekly</option>
+                    <option value="mensual">Monthly</option>
                 </select>
             </div>
-            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-2.5 px-4 rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 mt-2"
+            >
                 Add Task
             </button>
         </form>
