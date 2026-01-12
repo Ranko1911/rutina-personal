@@ -8,7 +8,7 @@ let tasks = [
         id: "uuid-1234",
         titulo: "Entrenar Pierna",
         descripcion: "Sentadillas y prensa",
-        categoria_id: "cat-01",
+        categoria_id: "Health",
         tipo_recurrencia: "semanal",
         configuracion_recurrencia: {
             dias_semana: ["Lunes", "Jueves"]
