@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { API_URL } from '../config';
 
 const TaskForm = ({ onTaskAdded }) => {
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [tipoRecurrencia, setTipoRecurrencia] = useState('puntual');
+    const [categoria, setCategoria] = useState('General');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -11,11 +13,10 @@ const TaskForm = ({ onTaskAdded }) => {
             titulo,
             descripcion,
             tipo_recurrencia: tipoRecurrencia,
-            categoria_id: 'default'
+            categoria_id: categoria // Using the selected category name as ID for simplicity
         };
 
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
             const response = await fetch(`${API_URL}/api/tasks`, {
                 method: 'POST',
                 headers: {
@@ -27,6 +28,7 @@ const TaskForm = ({ onTaskAdded }) => {
             onTaskAdded(data);
             setTitulo('');
             setDescripcion('');
+            setCategoria('General');
         } catch (error) {
             console.error('Error adding task:', error);
         }
@@ -52,6 +54,20 @@ const TaskForm = ({ onTaskAdded }) => {
                     onChange={(e) => setDescripcion(e.target.value)}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
+            </div>
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">Category</label>
+                <select
+                    value={categoria}
+                    onChange={(e) => setCategoria(e.target.value)}
+                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                    <option value="General">General</option>
+                    <option value="Health">Salud</option>
+                    <option value="Work">Trabajo</option>
+                    <option value="Home">Hogar</option>
+                    <option value="Leisure">Ocio</option>
+                </select>
             </div>
             <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">Recurrence</label>
