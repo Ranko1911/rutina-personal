@@ -1,0 +1,173 @@
+/* Analytics View Styles */
+
+.analytics-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.analytics-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.analytics-grid-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.analytics-card {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.analytics-card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* Heatmap Grid */
+.heatmap-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.heatmap-day-cell {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: transform var(--transition-fast);
+    cursor: default;
+    border: 1px solid var(--color-border);
+}
+
+.heatmap-day-cell:hover {
+    transform: scale(1.1);
+    z-index: 2;
+}
+
+.heatmap-level-0 {
+    background: hsl(var(--primary-hue), 10%, 96%);
+    color: var(--color-text-softer);
+}
+
+.heatmap-level-1 {
+    background: hsl(150, 60%, 85%);
+    color: hsl(150, 70%, 25%);
+    border-color: hsl(150, 60%, 75%);
+}
+
+.heatmap-level-2 {
+    background: hsl(150, 65%, 65%);
+    color: white;
+    border-color: hsl(150, 65%, 55%);
+}
+
+.heatmap-level-3 {
+    background: hsl(150, 70%, 45%);
+    color: white;
+    border-color: hsl(150, 70%, 35%);
+    box-shadow: 0 2px 6px hsla(150, 70%, 45%, 0.35);
+}
+
+/* Day of week bars */
+.weekday-bar-row {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.weekday-bar-label {
+    width: 40px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+.weekday-bar-track {
+    flex: 1;
+    height: 12px;
+    background: var(--color-border);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.weekday-bar-fill {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 99px;
+    transition: width 0.5s ease-out;
+}
+
+.weekday-bar-val {
+    width: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: right;
+    color: var(--color-text-softer);
+}
+
+/* User performance card */
+.user-rank-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.user-rank-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    background: hsl(var(--primary-hue), 15%, 98%);
+    border: 1px solid var(--color-border);
+}
+
+.user-badge-large {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.user-avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
