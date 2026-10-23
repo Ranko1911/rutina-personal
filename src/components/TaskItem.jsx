@@ -80,16 +80,14 @@ export const TaskItem = ({ task, onToggle, users }) => {
                                 <span>{assignedUser.avatar || '👤'}</span> {assignedUser.name}
                             </span>
                         )}
-                        {task.periodicity === 'custom' && (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <Clock size={12} /> Cada {task.customInterval} días
-                            </span>
-                        )}
-                        {task.periodicity === 'onetime' && (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                <Clock size={12} /> Una vez
-                            </span>
-                        )}
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Clock size={12} />
+                            {task.periodicity === 'daily' && 'Diario'}
+                            {task.periodicity === 'weekly' && 'Semanal'}
+                            {task.periodicity === 'monthly' && 'Mensual'}
+                            {task.periodicity === 'custom' && `Cada ${task.customInterval} días`}
+                            {task.periodicity === 'onetime' && 'Puntual'}
+                        </span>
                     </div>
                 </div>
             </div>

@@ -36,7 +36,7 @@ export const Layout = ({ children, activeTab, onTabChange, isDark, onToggleTheme
                     <NavItem icon={<LayoutDashboard size={20} />} label="Tareas Diarias" active={activeTab === 'daily'} onClick={() => onTabChange('daily')} />
                     <NavItem icon={<Calendar size={20} />} label="Semanales" active={activeTab === 'weekly'} onClick={() => onTabChange('weekly')} />
                     <NavItem icon={<Calendar size={20} />} label="Mensuales" active={activeTab === 'monthly'} onClick={() => onTabChange('monthly')} />
-                    <NavItem icon={<CheckSquare size={20} />} label="Todas/Custom" active={activeTab === 'custom'} onClick={() => onTabChange('custom')} />
+                    <NavItem icon={<CheckSquare size={20} />} label="Todas las Tareas" active={activeTab === 'all' || activeTab === 'custom'} onClick={() => onTabChange('all')} />
                 </nav>
 
                 <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xs)', borderTop: '1px solid var(--color-border)', paddingTop: 'var(--spacing-md)' }}>
