@@ -374,6 +374,57 @@ export const storage = {
         }
     },
 
+    // Generates a compact base64-encoded string for 1-click copy/paste sync between devices without a backend
+    getSyncCode: () => {
+        try {
+            const payload = {
+                v: 3,
+                tasks: storage.getTasks(),
+                users: storage.getUsers(),
+                exportedAt: new Date().toISOString()
+            };
+            const json = JSON.stringify(payload);
+            return btoa(encodeURIComponent(json));
+        } catch (error) {
+            console.error('Error generating sync code', error);
+            return null;
+        }
+    },
+
+    // Imports a compact sync code pasted from another device
+    importSyncCode: (syncCode) => {
+        try {
+            if (!syncCode || typeof syncCode !== 'string') {
+                throw new Error('El código de sincronización está vacío');
+            }
+            const json = decodeURIComponent(atob(syncCode.trim()));
+            const data = JSON.parse(json);
+            if (!data.tasks || !Array.isArray(data.tasks)) {
+                throw new Error('El código no contiene hábitos válidos');
+            }
+            storage.saveTasks(data.tasks);
+            if (data.users && Array.isArray(data.users)) {
+                storage.saveUsers(data.users);
+            }
+            return { success: true, count: data.tasks.length };
+        } catch (error) {
+            return { success: false, error: error.message || 'Código de sincronización corrupto o no válido' };
+        }
+    },
+
+    // Request persistent storage from the browser so browser cleanup tools don't purge data
+    requestPersistence: async () => {
+        try {
+            if (navigator.storage && navigator.storage.persist) {
+                const isPersisted = await navigator.storage.persist();
+                return isPersisted;
+            }
+            return false;
+        } catch {
+            return false;
+        }
+    },
+
     resetAll: () => {
         try {
             localStorage.removeItem(STORAGE_KEYS.TASKS);

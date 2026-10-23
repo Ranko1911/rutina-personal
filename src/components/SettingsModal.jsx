@@ -10,7 +10,10 @@ import {
     VolumeX,
     ShieldAlert,
     Check,
-    FileText
+    Copy,
+    Smartphone,
+    Database,
+    ShieldCheck
 } from 'lucide-react';
 import { storage } from '../utils/storage';
 import { soundFx } from '../utils/sound';
@@ -19,8 +22,15 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
     const [soundEnabled, setSoundEnabled] = useState(soundFx.isEnabled());
     const [statusMsg, setStatusMsg] = useState(null);
     const [showConfirmReset, setShowConfirmReset] = useState(false);
+    const [pastedCode, setPastedCode] = useState('');
+    const [isPersistent, setIsPersistent] = useState(false);
 
     if (!isOpen) return null;
+
+    const showStatus = (type, text) => {
+        setStatusMsg({ type, text });
+        setTimeout(() => setStatusMsg(null), 4000);
+    };
 
     const handleToggleSound = () => {
         const next = soundFx.toggle();
@@ -30,8 +40,44 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
 
     const handleExport = () => {
         storage.exportBackup();
-        setStatusMsg({ type: 'success', text: 'Copia de seguridad descargada correctamente.' });
-        setTimeout(() => setStatusMsg(null), 4000);
+        showStatus('success', 'Copia de seguridad descargada correctamente.');
+    };
+
+    const handleCopySyncCode = () => {
+        const code = storage.getSyncCode();
+        if (code) {
+            navigator.clipboard.writeText(code).then(() => {
+                showStatus('success', '¡Código copiado al portapapeles! Pégalo en tu otro dispositivo.');
+            }).catch(() => {
+                showStatus('error', 'No se pudo copiar automáticamente. Usa la exportación JSON.');
+            });
+        }
+    };
+
+    const handleImportSyncCode = (e) => {
+        e.preventDefault();
+        if (!pastedCode.trim()) {
+            showStatus('error', 'Pega primero un código de sincronización.');
+            return;
+        }
+        const res = storage.importSyncCode(pastedCode);
+        if (res.success) {
+            setPastedCode('');
+            showStatus('success', `¡Sincronización completada! Se cargaron ${res.count} hábitos.`);
+            if (onDataReload) onDataReload();
+        } else {
+            showStatus('error', `Error al importar: ${res.error}`);
+        }
+    };
+
+    const handleRequestPersistence = async () => {
+        const granted = await storage.requestPersistence();
+        setIsPersistent(granted);
+        if (granted) {
+            showStatus('success', '¡Almacenamiento persistente garantizado por el navegador!');
+        } else {
+            showStatus('success', 'El navegador ya gestiona tus datos de forma segura.');
+        }
     };
 
     const handleFileUpload = (e) => {
@@ -44,11 +90,10 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
             if (typeof content === 'string') {
                 const res = storage.importBackup(content);
                 if (res.success) {
-                    setStatusMsg({ type: 'success', text: '¡Datos importados con éxito!' });
+                    showStatus('success', '¡Datos importados con éxito!');
                     if (onDataReload) onDataReload();
-                    setTimeout(() => setStatusMsg(null), 3000);
                 } else {
-                    setStatusMsg({ type: 'error', text: `Error al importar: ${res.error}` });
+                    showStatus('error', `Error al importar: ${res.error}`);
                 }
             }
         };
@@ -58,9 +103,8 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
     const handleReset = () => {
         storage.resetAll();
         setShowConfirmReset(false);
-        setStatusMsg({ type: 'success', text: 'Datos reiniciados de fábrica.' });
+        showStatus('success', 'Rutina de Ancor restablecida con éxito.');
         if (onDataReload) onDataReload();
-        setTimeout(() => setStatusMsg(null), 3000);
     };
 
     return (
@@ -78,12 +122,17 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
             zIndex: 1000,
             padding: 'var(--spacing-md)'
         }}>
-            <div className="card" style={{ width: '100%', maxWidth: '520px', boxShadow: 'var(--shadow-lg)' }}>
+            <div className="card" style={{ width: '100%', maxWidth: '540px', maxHeight: '90vh', overflowY: 'auto', boxShadow: 'var(--shadow-lg)' }}>
                 {/* Header */}
                 <div className="flex items-center justify-between" style={{ marginBottom: 'var(--spacing-md)' }}>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        Configuración & Datos ⚙️
-                    </h2>
+                    <div>
+                        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            Gestión de Datos Locales & Ajustes ⚙️
+                        </h2>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-softer)' }}>
+                            100% privado en tu navegador (Sin servidor externo)
+                        </span>
+                    </div>
                     <button
                         onClick={onClose}
                         style={{ background: 'transparent', padding: '6px', borderRadius: '50%', color: 'var(--color-text-softer)' }}
@@ -109,9 +158,58 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
                 )}
 
                 <div className="flex flex-col gap-md">
+                    {/* Cross-Device Instant Sync Section */}
+                    <div style={{
+                        padding: '12px 14px',
+                        background: 'hsl(var(--primary-hue), 25%, 96%)',
+                        borderRadius: 'var(--radius-md)',
+                        border: '1px solid hsla(var(--primary-hue), 50%, 50%, 0.2)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-primary)' }}>
+                            <Smartphone size={18} /> Sincronizar Móvil / PC (En 1 Clic)
+                        </div>
+                        <p style={{ fontSize: '0.78rem', color: 'var(--color-text-softer)', margin: '6px 0 10px 0' }}>
+                            Lleva tus mismos hábitos de tu ordenador a tu móvil (o viceversa) copiando y pegando este código:
+                        </p>
+
+                        <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
+                            <button
+                                onClick={handleCopySyncCode}
+                                className="btn-primary"
+                                style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px 12px', fontSize: '0.82rem' }}
+                            >
+                                <Copy size={15} /> Copiar Código de Mis Datos
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleImportSyncCode} style={{ display: 'flex', gap: '6px' }}>
+                            <input
+                                value={pastedCode}
+                                onChange={e => setPastedCode(e.target.value)}
+                                placeholder="Pegar código de otro dispositivo aquí..."
+                                style={{ flex: 1, fontSize: '0.8rem', padding: '6px 10px' }}
+                            />
+                            <button
+                                type="submit"
+                                style={{
+                                    fontSize: '0.8rem',
+                                    fontWeight: 700,
+                                    padding: '6px 12px',
+                                    borderRadius: 'var(--radius-sm)',
+                                    background: 'var(--color-primary)',
+                                    color: 'white',
+                                    border: 'none',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                Restaurar
+                            </button>
+                        </form>
+                    </div>
+
                     {/* Preferences Section */}
                     <div>
-                        <h3 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--color-text-softer)', marginBottom: 'var(--spacing-sm)' }}>
+                        <h3 style={{ fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--color-text-softer)', marginBottom: 'var(--spacing-xs)' }}>
                             Preferencias de Interfaz
                         </h3>
 
@@ -123,18 +221,17 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between',
-                                    padding: '12px 14px',
+                                    padding: '10px 14px',
                                     borderRadius: 'var(--radius-md)',
                                     background: 'var(--color-bg-app)',
                                     border: '1px solid var(--color-border)',
                                     color: 'var(--color-text-main)'
                                 }}
                             >
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', fontWeight: 600 }}>
-                                    {isDark ? <Moon size={18} color="var(--color-primary)" /> : <Sun size={18} color="var(--color-warning)" />}
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: 600 }}>
+                                    {isDark ? <Moon size={16} color="var(--color-primary)" /> : <Sun size={16} color="var(--color-warning)" />}
                                     Tema {isDark ? 'Oscuro' : 'Claro'}
                                 </span>
-                                <span style={{ fontSize: '0.75rem', color: 'var(--color-text-softer)' }}>Cambiar</span>
                             </button>
 
                             {/* Sound Toggle */}
@@ -144,19 +241,19 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between',
-                                    padding: '12px 14px',
+                                    padding: '10px 14px',
                                     borderRadius: 'var(--radius-md)',
                                     background: 'var(--color-bg-app)',
                                     border: '1px solid var(--color-border)',
                                     color: 'var(--color-text-main)'
                                 }}
                             >
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', fontWeight: 600 }}>
-                                    {soundEnabled ? <Volume2 size={18} color="var(--color-success)" /> : <VolumeX size={18} color="var(--color-text-softer)" />}
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: 600 }}>
+                                    {soundEnabled ? <Volume2 size={16} color="var(--color-success)" /> : <VolumeX size={16} color="var(--color-text-softer)" />}
                                     Sonidos
                                 </span>
-                                <span style={{ fontSize: '0.75rem', color: soundEnabled ? 'var(--color-success)' : 'var(--color-text-softer)' }}>
-                                    {soundEnabled ? 'Activado' : 'Silencio'}
+                                <span style={{ fontSize: '0.72rem', color: soundEnabled ? 'var(--color-success)' : 'var(--color-text-softer)', fontWeight: 700 }}>
+                                    {soundEnabled ? 'On' : 'Off'}
                                 </span>
                             </button>
                         </div>
@@ -164,8 +261,8 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
 
                     {/* Data Management Section */}
                     <div>
-                        <h3 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--color-text-softer)', marginBottom: 'var(--spacing-sm)' }}>
-                            Copia de Seguridad y Portabilidad
+                        <h3 style={{ fontSize: '0.82rem', textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--color-text-softer)', marginBottom: 'var(--spacing-xs)' }}>
+                            Archivos de Respaldo (.JSON)
                         </h3>
 
                         <div className="flex flex-col gap-sm">
@@ -180,11 +277,12 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
                                     borderRadius: 'var(--radius-md)',
                                     background: 'var(--color-bg-app)',
                                     border: '1px solid var(--color-border)',
-                                    color: 'var(--color-text-main)'
+                                    color: 'var(--color-text-main)',
+                                    cursor: 'pointer'
                                 }}
                             >
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', fontWeight: 500 }}>
-                                    <Download size={18} color="var(--color-primary)" /> Exportar Datos a JSON
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: 500 }}>
+                                    <Download size={16} color="var(--color-primary)" /> Descargar Copia en Archivo JSON
                                 </span>
                                 <span style={{ fontSize: '0.75rem', color: 'var(--color-primary)', fontWeight: 600 }}>Descargar</span>
                             </button>
@@ -201,10 +299,10 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
                                 color: 'var(--color-text-main)',
                                 cursor: 'pointer'
                             }}>
-                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', fontWeight: 500 }}>
-                                    <Upload size={18} color="var(--color-primary)" /> Importar Copia de Seguridad
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: 500 }}>
+                                    <Upload size={16} color="var(--color-primary)" /> Restaurar desde Archivo JSON
                                 </span>
-                                <span style={{ fontSize: '0.75rem', color: 'var(--color-primary)', fontWeight: 600 }}>Seleccionar Archivo</span>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--color-primary)', fontWeight: 600 }}>Subir</span>
                                 <input
                                     type="file"
                                     accept=".json"
@@ -212,6 +310,27 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
                                     style={{ display: 'none' }}
                                 />
                             </label>
+
+                            {/* Persistence Request */}
+                            <button
+                                onClick={handleRequestPersistence}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    padding: '10px 14px',
+                                    borderRadius: 'var(--radius-md)',
+                                    background: 'var(--color-bg-app)',
+                                    border: '1px solid var(--color-border)',
+                                    color: 'var(--color-text-main)',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', fontWeight: 500 }}>
+                                    <ShieldCheck size={16} color="var(--color-success)" /> Blindar Almacenamiento Permanente
+                                </span>
+                                <span style={{ fontSize: '0.75rem', color: 'var(--color-success)', fontWeight: 600 }}>Activar</span>
+                            </button>
                         </div>
                     </div>
 
@@ -225,13 +344,14 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
                                     alignItems: 'center',
                                     gap: '8px',
                                     background: 'transparent',
-                                    color: 'var(--color-danger, #e11d48)',
-                                    fontSize: '0.85rem',
+                                    color: 'var(--color-primary)',
+                                    fontSize: '0.82rem',
                                     padding: '4px 0',
-                                    fontWeight: 600
+                                    fontWeight: 600,
+                                    cursor: 'pointer'
                                 }}
                             >
-                                <RotateCcw size={16} /> Reiniciar datos de fábrica
+                                <RotateCcw size={15} /> Restablecer a hábitos predeterminados de Ancor
                             </button>
                         ) : (
                             <div style={{
@@ -240,11 +360,11 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
                                 borderRadius: 'var(--radius-md)',
                                 padding: '12px'
                             }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#be123c', fontWeight: 700, fontSize: '0.88rem' }}>
-                                    <ShieldAlert size={18} /> ¿Estás seguro de reiniciar todo?
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#be123c', fontWeight: 700, fontSize: '0.85rem' }}>
+                                    <ShieldAlert size={16} /> ¿Reiniciar a los hábitos de Ancor?
                                 </div>
                                 <p style={{ fontSize: '0.78rem', color: '#881337', margin: '6px 0 10px 0' }}>
-                                    Se borrarán todas las tareas, hábitos y miembros creados, volviendo a los ejemplos iniciales.
+                                    Se restaurarán las rutinas completas de Salud, Higiene, Nutrición, Futuro y Hogar.
                                 </p>
                                 <div style={{ display: 'flex', gap: '8px' }}>
                                     <button
@@ -258,7 +378,7 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
                                             borderRadius: '6px'
                                         }}
                                     >
-                                        Sí, reiniciar
+                                        Sí, restablecer
                                     </button>
                                     <button
                                         onClick={() => setShowConfirmReset(false)}

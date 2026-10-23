@@ -84,6 +84,31 @@ export const Layout = ({ children, activeTab, onTabChange, isDark, onToggleTheme
                             <Settings size={18} />
                         </button>
                     </div>
+
+                    {/* Local Data Storage Status Indicator */}
+                    <button
+                        onClick={onOpenSettings}
+                        title="Tus datos se guardan automáticamente en este navegador de forma 100% privada. Pulsa para sincronizar o respaldar."
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '6px 10px',
+                            marginTop: '2px',
+                            background: 'var(--color-bg-app)',
+                            border: '1px solid var(--color-border)',
+                            borderRadius: 'var(--radius-sm)',
+                            cursor: 'pointer',
+                            fontSize: '0.72rem',
+                            color: 'var(--color-text-softer)'
+                        }}
+                    >
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: 'var(--color-success)' }}></span>
+                            <span style={{ fontWeight: 600 }}>Datos en Local</span>
+                        </span>
+                        <span style={{ color: 'var(--color-primary)', fontWeight: 700 }}>Sincronizar</span>
+                    </button>
                 </div>
             </aside>
 
