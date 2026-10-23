@@ -275,7 +275,7 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
                     >
                         <span className="profile-chip-avatar" style={{ backgroundColor: 'hsla(var(--primary-hue), 70%, 50%, 0.15)' }}>✨</span>
                         <div className="profile-chip-info">
-                            <span className="profile-chip-name">Toda la Familia</span>
+                            <span className="profile-chip-name">Vista Global</span>
                             <span className="profile-chip-sub">Todos los hábitos</span>
                         </div>
                         <span className="profile-chip-badge">{tasks.length}</span>
@@ -311,6 +311,42 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
                     })}
                 </div>
             </div>
+
+            {/* Ancor Custom Profile Focus Banner */}
+            {(selectedUserFilter === 'ancor' || selectedUserFilter === 'all') && (
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '12px 18px',
+                    background: 'linear-gradient(90deg, hsla(155, 75%, 45%, 0.12), hsla(210, 80%, 55%, 0.12))',
+                    border: '1.5px solid hsla(155, 75%, 45%, 0.3)',
+                    borderRadius: 'var(--radius-md)',
+                    flexWrap: 'wrap',
+                    gap: '12px',
+                    animation: 'fadeIn 0.3s ease'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <span style={{ fontSize: '1.8rem' }}>⚡</span>
+                        <div>
+                            <div style={{ fontWeight: 800, fontSize: '1.02rem', color: 'var(--color-text-main)' }}>
+                                Rutina & Hábitos de Ancor (25 años)
+                            </div>
+                            <div style={{ fontSize: '0.82rem', color: 'var(--color-text-softer)' }}>
+                                ⏰ Jornada Laboral: <strong>07:30 a 15:30</strong> (Lunes a Viernes) • 🎯 Enfoque: <strong>Fitness, Salud e Higiene & Construcción de Futuro</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '0.78rem', fontWeight: 600 }}>
+                        <span style={{ background: 'var(--color-bg-card)', padding: '4px 10px', borderRadius: '12px', border: '1px solid var(--color-border)', color: 'hsl(150, 70%, 42%)' }}>
+                            🏋️‍♂️ Ponerse en forma
+                        </span>
+                        <span style={{ background: 'var(--color-bg-card)', padding: '4px 10px', borderRadius: '12px', border: '1px solid var(--color-border)', color: 'hsl(225, 75%, 56%)' }}>
+                            🚀 Enfoque en el Futuro
+                        </span>
+                    </div>
+                </div>
+            )}
 
             {/* Dashboard Hero: Donut & KPI Cards */}
             <div className="dashboard-grid">

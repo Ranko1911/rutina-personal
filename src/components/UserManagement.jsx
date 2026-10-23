@@ -133,18 +133,34 @@ export const UserManagement = ({ users, onAddUser, onRemoveUser }) => {
                                 </div>
                             </div>
 
-                            <button
-                                onClick={() => onRemoveUser(user.id)}
-                                style={{
-                                    background: 'transparent',
-                                    color: 'var(--color-warning)',
-                                    padding: '6px',
-                                    borderRadius: '6px'
-                                }}
-                                title={`Eliminar perfil de ${user.name}`}
-                            >
-                                <Trash2 size={16} />
-                            </button>
+                            {user.id === 'admin' || user.id === 'ancor' ? (
+                                <span style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 700,
+                                    color: 'var(--color-primary)',
+                                    background: 'var(--color-primary-light)',
+                                    padding: '4px 10px',
+                                    borderRadius: '12px'
+                                }}>
+                                    <Shield size={13} /> Principal
+                                </span>
+                            ) : (
+                                <button
+                                    onClick={() => onRemoveUser(user.id)}
+                                    style={{
+                                        background: 'transparent',
+                                        color: 'var(--color-warning)',
+                                        padding: '6px',
+                                        borderRadius: '6px'
+                                    }}
+                                    title={`Eliminar perfil de ${user.name}`}
+                                >
+                                    <Trash2 size={16} />
+                                </button>
+                            )}
                         </div>
                     ))}
                 </div>

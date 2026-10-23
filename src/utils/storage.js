@@ -1,208 +1,281 @@
 const STORAGE_KEYS = {
-    TASKS: 'tasks_app_data_v1',
-    USERS: 'tasks_app_users_v1'
+    TASKS: 'tasks_app_ancor_v3',
+    USERS: 'tasks_app_users_ancor_v3'
 };
+
+export const DEFAULT_USERS = [
+    { id: 'admin', name: 'Admin', color: 'hsl(230, 75%, 60%)', avatar: '🛡️', role: 'Administrador' },
+    { id: 'ancor', name: 'Ancor', color: 'hsl(155, 75%, 45%)', avatar: '⚡', role: '25 años • Fitness & Futuro' }
+];
+
+export const DEFAULT_TASKS = [
+    // 1. Salud & Fitness (Objetivo: Ponerse en forma)
+    {
+        id: 't-ancor-salud-1',
+        title: 'Entrenamiento de fuerza / Gimnasio (tarde 17:00)',
+        category: 'salud',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-salud-2',
+        title: 'Caminar 8.000 a 10.000 pasos al día',
+        category: 'salud',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-salud-3',
+        title: 'Dormir 7.5 - 8h (acostarse antes de las 23:00)',
+        category: 'salud',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-salud-4',
+        title: 'Movilidad y estiramientos post-jornada (10 min)',
+        category: 'salud',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-salud-5',
+        title: 'Creatina, hidratación y suplementación matutina',
+        category: 'salud',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+
+    // 2. Higiene & Cuidado Personal
+    {
+        id: 't-ancor-higiene-1',
+        title: 'Cepillado dental (desayuno, almuerzo post-trabajo y noche)',
+        category: 'higiene',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-higiene-2',
+        title: 'Hilo dental y enjuague bucal antes de dormir',
+        category: 'higiene',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-higiene-3',
+        title: 'Skincare matutino: limpieza facial + protector solar (antes de 7:30)',
+        category: 'higiene',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-higiene-4',
+        title: 'Ducha reparadora y cuidado personal tras entrenar',
+        category: 'higiene',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+
+    // 3. Nutrición & Hidratación (Jornada 7:30 - 15:30)
+    {
+        id: 't-ancor-nutri-1',
+        title: 'Beber 2.5L a 3L de agua (botella en el trabajo)',
+        category: 'nutricion',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-nutri-2',
+        title: 'Cubrir objetivo diario de proteína (1.6 - 2g/kg)',
+        category: 'nutricion',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-nutri-3',
+        title: 'Comida limpia y saludable (cero ultraprocesados en el trabajo)',
+        category: 'nutricion',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-nutri-4',
+        title: 'Dejar preparado el tupper saludable para la jornada de mañana',
+        category: 'nutricion',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+
+    // 4. Mente, Enfoque en el Futuro & Finanzas
+    {
+        id: 't-ancor-mente-1',
+        title: 'Bloque de avance en proyectos de futuro / estudio (45 min tarde)',
+        category: 'mente',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-mente-2',
+        title: 'Lectura formativa o desarrollo personal (20 min)',
+        category: 'mente',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-mente-3',
+        title: 'Cero pantallas 30 min antes de dormir',
+        category: 'mente',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-mente-4',
+        title: 'Revisión financiera semanal y plan de ahorro / inversión',
+        category: 'mente',
+        periodicity: 'weekly',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+
+    // 5. Hogar & Disciplina
+    {
+        id: 't-ancor-hogar-1',
+        title: 'Ventilar habitación 15m y cama hecha antes de salir a trabajar (7:15)',
+        category: 'hogar',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-hogar-2',
+        title: 'Cocina despejada y fregadero limpio tras cenar',
+        category: 'hogar',
+        periodicity: 'daily',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    },
+    {
+        id: 't-ancor-hogar-3',
+        title: 'Planificación de comidas, colada y orden semanal (Domingo)',
+        category: 'hogar',
+        periodicity: 'weekly',
+        customInterval: 1,
+        assignedTo: 'ancor',
+        completed: false,
+        completedDates: [],
+        lastCompletedAt: null,
+        createdAt: new Date().toISOString()
+    }
+];
 
 export const storage = {
     getTasks: () => {
         try {
             const data = localStorage.getItem(STORAGE_KEYS.TASKS);
             if (!data) {
-                const defaultTasks = [
-                    // Salud
-                    {
-                        id: 't-salud-1',
-                        title: 'Hacer 30 min de ejercicio (fuerza / cardio)',
-                        category: 'salud',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '1',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        id: 't-salud-2',
-                        title: 'Caminar 8.000 a 10.000 pasos al día',
-                        category: 'salud',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '2',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        id: 't-salud-3',
-                        title: 'Dormir 7 a 8 horas de descanso reparador',
-                        category: 'salud',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        id: 't-salud-4',
-                        title: 'Tomar vitaminas / suplementos matutinos',
-                        category: 'salud',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '1',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    // Higiene
-                    {
-                        id: 't-higiene-1',
-                        title: 'Cepillado dental completo (3 veces al día)',
-                        category: 'higiene',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        id: 't-higiene-2',
-                        title: 'Rutina facial: limpieza, hidratante y solar',
-                        category: 'higiene',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '1',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        id: 't-higiene-3',
-                        title: 'Hilo dental y enjuague bucal nocturno',
-                        category: 'higiene',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '2',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        id: 't-higiene-4',
-                        title: 'Ducha y cuidado corporal',
-                        category: 'higiene',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    // Nutrición
-                    {
-                        id: 't-nutri-1',
-                        title: 'Beber 2 litros de agua',
-                        category: 'nutricion',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        id: 't-nutri-2',
-                        title: 'Comer 3 porciones de fruta o verdura fresca',
-                        category: 'nutricion',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '1',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    // Hogar
-                    {
-                        id: 't-hogar-1',
-                        title: 'Ventilar habitación 15m y hacer la cama',
-                        category: 'hogar',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        id: 't-hogar-2',
-                        title: 'Fregar platos y despejar cocina',
-                        category: 'hogar',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '2',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    // Mente
-                    {
-                        id: 't-mente-1',
-                        title: 'Lectura o estudio (20 min)',
-                        category: 'mente',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    },
-                    {
-                        id: 't-mente-2',
-                        title: 'Desconexión de pantallas 30 min antes de dormir',
-                        category: 'mente',
-                        periodicity: 'daily',
-                        customInterval: 1,
-                        assignedTo: '1',
-                        completed: false,
-                        completedDates: [],
-                        lastCompletedAt: null,
-                        createdAt: new Date().toISOString()
-                    }
-                ];
-                storage.saveTasks(defaultTasks);
-                return defaultTasks;
+                storage.saveTasks(DEFAULT_TASKS);
+                return DEFAULT_TASKS;
             }
             const parsed = JSON.parse(data);
-            // Ensure every task has a category assigned
-            const inferCategory = (title = '') => {
-                const lower = title.toLowerCase();
-                if (lower.includes('agua') || lower.includes('fruta') || lower.includes('comer') || lower.includes('comida') || lower.includes('nutri')) return 'nutricion';
-                if (lower.includes('diente') || lower.includes('facial') || lower.includes('skincare') || lower.includes('hilo') || lower.includes('ducha') || lower.includes('higiene')) return 'higiene';
-                if (lower.includes('cama') || lower.includes('plato') || lower.includes('cocina') || lower.includes('limp') || lower.includes('lavadora') || lower.includes('hogar')) return 'hogar';
-                if (lower.includes('leer') || lower.includes('lectura') || lower.includes('estudio') || lower.includes('medita') || lower.includes('pantalla') || lower.includes('mente')) return 'mente';
-                return 'salud';
-            };
             return parsed.map(t => ({
                 ...t,
-                category: t.category || inferCategory(t.title)
+                category: t.category || 'salud'
             }));
         } catch (error) {
             console.error('Error reading tasks', error);
-            return [];
+            return DEFAULT_TASKS;
         }
     },
 
@@ -217,24 +290,21 @@ export const storage = {
     getUsers: () => {
         try {
             const data = localStorage.getItem(STORAGE_KEYS.USERS);
-            // Default users if none exist
             if (!data) {
-                const defaultUsers = [
-                    { id: '1', name: 'Mamá', color: 'hsl(340, 70%, 60%)', avatar: '👩', role: 'Salud & Cuidado' },
-                    { id: '2', name: 'Papá', color: 'hsl(200, 70%, 60%)', avatar: '👨', role: 'Fitness & Hogar' },
-                ];
-                storage.saveUsers(defaultUsers);
-                return defaultUsers;
+                storage.saveUsers(DEFAULT_USERS);
+                return DEFAULT_USERS;
             }
             const parsed = JSON.parse(data);
-            return parsed.map((u, i) => ({
-                ...u,
-                avatar: u.avatar || (i % 2 === 0 ? '👩' : '👨'),
-                role: u.role || 'Miembro'
-            }));
+            // Verify users are Admin and Ancor
+            const hasAncor = parsed.some(u => u.name.toLowerCase() === 'ancor');
+            if (!hasAncor || parsed.length > 2) {
+                storage.saveUsers(DEFAULT_USERS);
+                return DEFAULT_USERS;
+            }
+            return parsed;
         } catch (error) {
             console.error('Error reading users', error);
-            return [];
+            return DEFAULT_USERS;
         }
     },
 
@@ -271,7 +341,7 @@ export const storage = {
 
     exportBackup: () => {
         const payload = {
-            version: '2.0',
+            version: '3.0',
             exportedAt: new Date().toISOString(),
             tasks: storage.getTasks(),
             users: storage.getUsers()
@@ -281,7 +351,7 @@ export const storage = {
         const a = document.createElement('a');
         a.href = url;
         const dateStr = new Date().toISOString().slice(0, 10);
-        a.download = `HogarTasks_Backup_${dateStr}.json`;
+        a.download = `HogarTasks_Ancor_${dateStr}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -308,6 +378,8 @@ export const storage = {
         try {
             localStorage.removeItem(STORAGE_KEYS.TASKS);
             localStorage.removeItem(STORAGE_KEYS.USERS);
+            storage.saveTasks(DEFAULT_TASKS);
+            storage.saveUsers(DEFAULT_USERS);
             return { success: true };
         } catch (error) {
             return { success: false, error: error.message };
