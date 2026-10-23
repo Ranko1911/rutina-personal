@@ -9,9 +9,11 @@ export const storage = {
             const data = localStorage.getItem(STORAGE_KEYS.TASKS);
             if (!data) {
                 const defaultTasks = [
+                    // Salud
                     {
-                        id: 't-1',
-                        title: 'Beber 2L de agua',
+                        id: 't-salud-1',
+                        title: 'Hacer 30 min de ejercicio (fuerza / cardio)',
+                        category: 'salud',
                         periodicity: 'daily',
                         customInterval: 1,
                         assignedTo: '1',
@@ -21,8 +23,9 @@ export const storage = {
                         createdAt: new Date().toISOString()
                     },
                     {
-                        id: 't-2',
-                        title: 'Hacer 30 min de ejercicio',
+                        id: 't-salud-2',
+                        title: 'Caminar 8.000 a 10.000 pasos al día',
+                        category: 'salud',
                         periodicity: 'daily',
                         customInterval: 1,
                         assignedTo: '2',
@@ -32,11 +35,148 @@ export const storage = {
                         createdAt: new Date().toISOString()
                     },
                     {
-                        id: 't-3',
-                        title: 'Lectura o estudio (20 min)',
+                        id: 't-salud-3',
+                        title: 'Dormir 7 a 8 horas de descanso reparador',
+                        category: 'salud',
                         periodicity: 'daily',
                         customInterval: 1,
                         assignedTo: '',
+                        completed: false,
+                        completedDates: [],
+                        lastCompletedAt: null,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 't-salud-4',
+                        title: 'Tomar vitaminas / suplementos matutinos',
+                        category: 'salud',
+                        periodicity: 'daily',
+                        customInterval: 1,
+                        assignedTo: '1',
+                        completed: false,
+                        completedDates: [],
+                        lastCompletedAt: null,
+                        createdAt: new Date().toISOString()
+                    },
+                    // Higiene
+                    {
+                        id: 't-higiene-1',
+                        title: 'Cepillado dental completo (3 veces al día)',
+                        category: 'higiene',
+                        periodicity: 'daily',
+                        customInterval: 1,
+                        assignedTo: '',
+                        completed: false,
+                        completedDates: [],
+                        lastCompletedAt: null,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 't-higiene-2',
+                        title: 'Rutina facial: limpieza, hidratante y solar',
+                        category: 'higiene',
+                        periodicity: 'daily',
+                        customInterval: 1,
+                        assignedTo: '1',
+                        completed: false,
+                        completedDates: [],
+                        lastCompletedAt: null,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 't-higiene-3',
+                        title: 'Hilo dental y enjuague bucal nocturno',
+                        category: 'higiene',
+                        periodicity: 'daily',
+                        customInterval: 1,
+                        assignedTo: '2',
+                        completed: false,
+                        completedDates: [],
+                        lastCompletedAt: null,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 't-higiene-4',
+                        title: 'Ducha y cuidado corporal',
+                        category: 'higiene',
+                        periodicity: 'daily',
+                        customInterval: 1,
+                        assignedTo: '',
+                        completed: false,
+                        completedDates: [],
+                        lastCompletedAt: null,
+                        createdAt: new Date().toISOString()
+                    },
+                    // Nutrición
+                    {
+                        id: 't-nutri-1',
+                        title: 'Beber 2 litros de agua',
+                        category: 'nutricion',
+                        periodicity: 'daily',
+                        customInterval: 1,
+                        assignedTo: '',
+                        completed: false,
+                        completedDates: [],
+                        lastCompletedAt: null,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 't-nutri-2',
+                        title: 'Comer 3 porciones de fruta o verdura fresca',
+                        category: 'nutricion',
+                        periodicity: 'daily',
+                        customInterval: 1,
+                        assignedTo: '1',
+                        completed: false,
+                        completedDates: [],
+                        lastCompletedAt: null,
+                        createdAt: new Date().toISOString()
+                    },
+                    // Hogar
+                    {
+                        id: 't-hogar-1',
+                        title: 'Ventilar habitación 15m y hacer la cama',
+                        category: 'hogar',
+                        periodicity: 'daily',
+                        customInterval: 1,
+                        assignedTo: '',
+                        completed: false,
+                        completedDates: [],
+                        lastCompletedAt: null,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 't-hogar-2',
+                        title: 'Fregar platos y despejar cocina',
+                        category: 'hogar',
+                        periodicity: 'daily',
+                        customInterval: 1,
+                        assignedTo: '2',
+                        completed: false,
+                        completedDates: [],
+                        lastCompletedAt: null,
+                        createdAt: new Date().toISOString()
+                    },
+                    // Mente
+                    {
+                        id: 't-mente-1',
+                        title: 'Lectura o estudio (20 min)',
+                        category: 'mente',
+                        periodicity: 'daily',
+                        customInterval: 1,
+                        assignedTo: '',
+                        completed: false,
+                        completedDates: [],
+                        lastCompletedAt: null,
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 't-mente-2',
+                        title: 'Desconexión de pantallas 30 min antes de dormir',
+                        category: 'mente',
+                        periodicity: 'daily',
+                        customInterval: 1,
+                        assignedTo: '1',
                         completed: false,
                         completedDates: [],
                         lastCompletedAt: null,
@@ -46,7 +186,20 @@ export const storage = {
                 storage.saveTasks(defaultTasks);
                 return defaultTasks;
             }
-            return JSON.parse(data);
+            const parsed = JSON.parse(data);
+            // Ensure every task has a category assigned
+            const inferCategory = (title = '') => {
+                const lower = title.toLowerCase();
+                if (lower.includes('agua') || lower.includes('fruta') || lower.includes('comer') || lower.includes('comida') || lower.includes('nutri')) return 'nutricion';
+                if (lower.includes('diente') || lower.includes('facial') || lower.includes('skincare') || lower.includes('hilo') || lower.includes('ducha') || lower.includes('higiene')) return 'higiene';
+                if (lower.includes('cama') || lower.includes('plato') || lower.includes('cocina') || lower.includes('limp') || lower.includes('lavadora') || lower.includes('hogar')) return 'hogar';
+                if (lower.includes('leer') || lower.includes('lectura') || lower.includes('estudio') || lower.includes('medita') || lower.includes('pantalla') || lower.includes('mente')) return 'mente';
+                return 'salud';
+            };
+            return parsed.map(t => ({
+                ...t,
+                category: t.category || inferCategory(t.title)
+            }));
         } catch (error) {
             console.error('Error reading tasks', error);
             return [];
@@ -67,13 +220,18 @@ export const storage = {
             // Default users if none exist
             if (!data) {
                 const defaultUsers = [
-                    { id: '1', name: 'Mamá', color: 'hsl(340, 70%, 60%)' },
-                    { id: '2', name: 'Papá', color: 'hsl(200, 70%, 60%)' },
+                    { id: '1', name: 'Mamá', color: 'hsl(340, 70%, 60%)', avatar: '👩', role: 'Salud & Cuidado' },
+                    { id: '2', name: 'Papá', color: 'hsl(200, 70%, 60%)', avatar: '👨', role: 'Fitness & Hogar' },
                 ];
                 storage.saveUsers(defaultUsers);
                 return defaultUsers;
             }
-            return JSON.parse(data);
+            const parsed = JSON.parse(data);
+            return parsed.map((u, i) => ({
+                ...u,
+                avatar: u.avatar || (i % 2 === 0 ? '👩' : '👨'),
+                role: u.role || 'Miembro'
+            }));
         } catch (error) {
             console.error('Error reading users', error);
             return [];

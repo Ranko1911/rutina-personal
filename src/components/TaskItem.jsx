@@ -1,9 +1,11 @@
 import React from 'react';
 import { Check, Clock, User } from 'lucide-react';
 import clsx from 'clsx';
+import { getCategoryMeta } from '../utils/categories';
 
 export const TaskItem = ({ task, onToggle, users }) => {
     const assignedUser = users.find(u => u.id === task.assignedTo);
+    const catMeta = getCategoryMeta(task.category);
 
     // Custom logic for due date display if needed
     const getDueText = () => {
@@ -53,10 +55,20 @@ export const TaskItem = ({ task, onToggle, users }) => {
                     }}>
                         {task.title}
                     </h3>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', fontSize: '0.8rem', color: 'var(--color-text-softer)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', fontSize: '0.8rem', color: 'var(--color-text-softer)', flexWrap: 'wrap', marginTop: '4px' }}>
+                        <span
+                            className="category-badge"
+                            style={{
+                                backgroundColor: `${catMeta.color}18`,
+                                color: catMeta.color,
+                                border: `1px solid ${catMeta.color}35`
+                            }}
+                        >
+                            {catMeta.emoji} {catMeta.shortLabel}
+                        </span>
                         {assignedUser && (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', backgroundColor: '#f0f0f0', padding: '2px 8px', borderRadius: '10px' }}>
-                                <User size={12} /> {assignedUser.name}
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', backgroundColor: `${assignedUser.color}20`, color: assignedUser.color, padding: '2px 8px', borderRadius: '10px' }}>
+                                <span>{assignedUser.avatar || '👤'}</span> {assignedUser.name}
                             </span>
                         )}
                         {task.periodicity === 'custom' && (

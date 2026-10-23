@@ -8,8 +8,10 @@ import {
     Users,
     Zap,
     Flame,
-    Award
+    Award,
+    Activity
 } from 'lucide-react';
+import { CATEGORY_LIST } from '../utils/categories';
 import '../styles/analytics.css';
 
 const SPANISH_WEEKDAYS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
@@ -98,7 +100,22 @@ export const Analytics = ({ tasks, users }) => {
             });
         }
 
-        // 5. Frequency breakdown
+        // 5. Category distribution
+        const categoryStats = CATEGORY_LIST.map(cat => {
+            const catTasks = tasks.filter(t => (t.category || 'salud') === cat.id);
+            let checks = 0;
+            catTasks.forEach(t => {
+                checks += (t.completedDates || []).length;
+            });
+            return {
+                ...cat,
+                tasksCount: catTasks.length,
+                completionsCount: checks
+            };
+        });
+        const maxCategoryChecks = Math.max(...categoryStats.map(c => c.completionsCount), 1);
+
+        // 6. Frequency breakdown
         const periodicityStats = {
             daily: tasks.filter(t => t.periodicity === 'daily').length,
             weekly: tasks.filter(t => t.periodicity === 'weekly').length,
@@ -113,7 +130,9 @@ export const Analytics = ({ tasks, users }) => {
             maxDayCount,
             bestDay: bestDay.count > 0 ? bestDay.name : 'Aún sin datos',
             memberStats,
-            periodicityStats
+            periodicityStats,
+            categoryStats,
+            maxCategoryChecks
         };
     }, [tasks, users]);
 
@@ -314,6 +333,49 @@ export const Analytics = ({ tasks, users }) => {
                                 </div>
                             </div>
                         ))}
+                    </div>
+                </div>
+
+                {/* Category Performance Breakdown */}
+                <div className="analytics-card">
+                    <div className="analytics-card-title">
+                        <Activity size={18} color="var(--color-primary)" />
+                        Hábitos por Área de Vida
+                    </div>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--color-text-softer)' }}>
+                        Constancia en Salud, Higiene, Nutrición, Hogar y Mente.
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'var(--spacing-sm)' }}>
+                        {stats.categoryStats.map(cat => {
+                            const pct = Math.round((cat.completionsCount / stats.maxCategoryChecks) * 100);
+                            return (
+                                <div key={cat.id} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', fontWeight: 600 }}>
+                                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <span>{cat.emoji}</span>
+                                            <span>{cat.label}</span>
+                                            <span style={{ fontSize: '0.72rem', color: 'var(--color-text-softer)', fontWeight: 500 }}>
+                                                ({cat.tasksCount} {cat.tasksCount === 1 ? 'hábito' : 'hábitos'})
+                                            </span>
+                                        </span>
+                                        <span style={{ color: cat.color, fontWeight: 700 }}>
+                                            {cat.completionsCount} checks
+                                        </span>
+                                    </div>
+                                    <div style={{ height: '7px', background: 'var(--color-border)', borderRadius: '99px', overflow: 'hidden' }}>
+                                        <div
+                                            style={{
+                                                height: '100%',
+                                                width: `${pct}%`,
+                                                backgroundColor: cat.color,
+                                                borderRadius: '99px',
+                                                transition: 'width 0.4s ease'
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
 

@@ -9,10 +9,12 @@ export const useUserManager = () => {
         setUsers(storage.getUsers());
     }, []);
 
-    const addUser = (name, color) => {
+    const addUser = (name, color, avatar = '👤', role = 'Miembro') => {
         const newUser = {
             id: uuidv4(),
             name,
+            avatar: avatar || '👤',
+            role: role || 'Miembro',
             color: color || `hsl(${Math.floor(Math.random() * 360)}, 70%, 60%)`
         };
         const updatedUsers = [...users, newUser];

@@ -73,10 +73,11 @@ export const useTaskManager = () => {
         setTasks(refreshedTasks);
     }, []);
 
-    const addTask = (title, periodicity, assignedTo, customInterval = 1) => {
+    const addTask = (title, periodicity, assignedTo, customInterval = 1, category = 'salud') => {
         const newTask = {
             id: uuidv4(),
             title,
+            category: category || 'salud',
             periodicity, // 'daily', 'weekly', 'monthly', 'custom'
             customInterval: parseInt(customInterval, 10) || 1,
             assignedTo,

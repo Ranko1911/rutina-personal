@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { X, Check } from 'lucide-react';
+import { CATEGORY_LIST } from '../utils/categories';
 
 export const TaskFormModal = ({ isOpen, onClose, onSave, taskToEdit = null, users = [] }) => {
     const [title, setTitle] = useState('');
+    const [category, setCategory] = useState('salud');
     const [periodicity, setPeriodicity] = useState('daily');
     const [customInterval, setCustomInterval] = useState(1);
     const [assignedTo, setAssignedTo] = useState('');
@@ -10,11 +12,13 @@ export const TaskFormModal = ({ isOpen, onClose, onSave, taskToEdit = null, user
     useEffect(() => {
         if (taskToEdit) {
             setTitle(taskToEdit.title || '');
+            setCategory(taskToEdit.category || 'salud');
             setPeriodicity(taskToEdit.periodicity || 'daily');
             setCustomInterval(taskToEdit.customInterval || 1);
             setAssignedTo(taskToEdit.assignedTo || '');
         } else {
             setTitle('');
+            setCategory('salud');
             setPeriodicity('daily');
             setCustomInterval(1);
             setAssignedTo('');
@@ -30,12 +34,13 @@ export const TaskFormModal = ({ isOpen, onClose, onSave, taskToEdit = null, user
         if (taskToEdit) {
             onSave(taskToEdit.id, {
                 title: title.trim(),
+                category,
                 periodicity,
                 customInterval,
                 assignedTo
             });
         } else {
-            onSave(title.trim(), periodicity, assignedTo, customInterval);
+            onSave(title.trim(), periodicity, assignedTo, customInterval, category);
         }
 
         onClose();
@@ -87,6 +92,42 @@ export const TaskFormModal = ({ isOpen, onClose, onSave, taskToEdit = null, user
                                 autoFocus
                             />
                         </label>
+
+                        {/* Category Selector Chips */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-text-main)' }}>
+                                Área / Categoría
+                            </span>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '6px' }}>
+                                {CATEGORY_LIST.map(cat => {
+                                    const isSelected = category === cat.id;
+                                    return (
+                                        <button
+                                            key={cat.id}
+                                            type="button"
+                                            onClick={() => setCategory(cat.id)}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '6px',
+                                                padding: '7px 10px',
+                                                borderRadius: 'var(--radius-sm)',
+                                                border: `1.5px solid ${isSelected ? cat.color : 'var(--color-border)'}`,
+                                                backgroundColor: isSelected ? `${cat.color}20` : 'var(--color-bg-card)',
+                                                color: isSelected ? cat.color : 'var(--color-text-softer)',
+                                                fontWeight: isSelected ? 700 : 500,
+                                                fontSize: '0.82rem',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.15s ease'
+                                            }}
+                                        >
+                                            <span style={{ fontSize: '1.05rem' }}>{cat.emoji}</span>
+                                            <span>{cat.shortLabel}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
 
                         <div className="flex gap-md">
                             <label style={{ flex: 1, fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-text-main)' }}>

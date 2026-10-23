@@ -23,11 +23,13 @@ import {
     Award,
     Search,
     Edit3,
-    Sparkles
+    Sparkles,
+    Layers
 } from 'lucide-react';
 import { TaskFormModal } from './TaskFormModal';
 import { soundFx } from '../utils/sound';
 import { launchConfetti } from '../utils/confetti';
+import { CATEGORY_LIST, getCategoryMeta } from '../utils/categories';
 import '../styles/habits.css';
 
 const SPANISH_DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
@@ -45,7 +47,9 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [taskToEdit, setTaskToEdit] = useState(null);
     const [selectedUserFilter, setSelectedUserFilter] = useState('all');
+    const [categoryFilter, setCategoryFilter] = useState('all');
     const [periodicityFilter, setPeriodicityFilter] = useState('all');
+    const [groupByCategory, setGroupByCategory] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
 
     // Week calculation (Monday to Sunday)
@@ -68,15 +72,16 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
         return MOTIVATIONAL_QUOTES[dayOfMonth % MOTIVATIONAL_QUOTES.length];
     }, []);
 
-    // Filter tasks by user, periodicity, and search query
+    // Filter tasks by user, category, periodicity, and search query
     const filteredTasks = useMemo(() => {
         return tasks.filter(t => {
             const matchUser = selectedUserFilter === 'all' || t.assignedTo === selectedUserFilter;
             const matchPeriod = periodicityFilter === 'all' || t.periodicity === periodicityFilter;
+            const matchCategory = categoryFilter === 'all' || (t.category || 'salud') === categoryFilter;
             const matchSearch = !searchQuery.trim() || t.title.toLowerCase().includes(searchQuery.toLowerCase());
-            return matchUser && matchPeriod && matchSearch;
+            return matchUser && matchPeriod && matchCategory && matchSearch;
         });
-    }, [tasks, selectedUserFilter, periodicityFilter, searchQuery]);
+    }, [tasks, selectedUserFilter, periodicityFilter, categoryFilter, searchQuery]);
 
     // Metrics & Gamification Calculations
     const metrics = useMemo(() => {
@@ -175,7 +180,7 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
         if (taskToEdit && onUpdate) {
             onUpdate(args[0], args[1]);
         } else {
-            onAdd(args[0], args[1], args[2], args[3]);
+            onAdd(args[0], args[1], args[2], args[3], args[4]);
         }
         setTaskToEdit(null);
     };
@@ -254,6 +259,56 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
                     >
                         <Plus size={18} /> Nuevo Hábito
                     </button>
+                </div>
+            </div>
+
+            {/* Profile Selector Bar */}
+            <div className="profile-selector-bar">
+                <div className="profile-selector-label">
+                    <User size={15} /> Perfil:
+                </div>
+                <div className="profile-chips">
+                    <button
+                        type="button"
+                        className={`profile-chip ${selectedUserFilter === 'all' ? 'active' : ''}`}
+                        onClick={() => setSelectedUserFilter('all')}
+                    >
+                        <span className="profile-chip-avatar" style={{ backgroundColor: 'hsla(var(--primary-hue), 70%, 50%, 0.15)' }}>✨</span>
+                        <div className="profile-chip-info">
+                            <span className="profile-chip-name">Toda la Familia</span>
+                            <span className="profile-chip-sub">Todos los hábitos</span>
+                        </div>
+                        <span className="profile-chip-badge">{tasks.length}</span>
+                    </button>
+                    {users.map(u => {
+                        const uTasks = tasks.filter(t => t.assignedTo === u.id);
+                        const uTodayCompleted = uTasks.filter(t => (t.completedDates || []).includes(todayStr)).length;
+                        const isSelected = selectedUserFilter === u.id;
+                        return (
+                            <button
+                                key={u.id}
+                                type="button"
+                                className={`profile-chip ${isSelected ? 'active' : ''}`}
+                                onClick={() => setSelectedUserFilter(u.id)}
+                                style={{
+                                    borderColor: isSelected ? u.color : undefined,
+                                    backgroundColor: isSelected ? `${u.color}18` : undefined
+                                }}
+                            >
+                                <span className="profile-chip-avatar" style={{ backgroundColor: `${u.color}25` }}>
+                                    {u.avatar || '👤'}
+                                </span>
+                                <div className="profile-chip-info">
+                                    <span className="profile-chip-name" style={{ color: isSelected ? u.color : undefined }}>
+                                        {u.name}
+                                    </span>
+                                    <span className="profile-chip-sub">
+                                        {uTodayCompleted}/{uTasks.length} hoy
+                                    </span>
+                                </div>
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
 
@@ -368,41 +423,51 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
                     </div>
                 </div>
 
-                {/* Search and Periodicity Toolbar */}
+                {/* Search and Category Toolbar */}
                 <div className="matrix-toolbar">
-                    <div className="search-input-box">
-                        <Search size={16} color="var(--color-text-softer)" />
-                        <input
-                            value={searchQuery}
-                            onChange={e => setSearchQuery(e.target.value)}
-                            placeholder="Buscar hábito..."
-                        />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', flexWrap: 'wrap', flex: 1 }}>
+                        <div className="search-input-box">
+                            <Search size={16} color="var(--color-text-softer)" />
+                            <input
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                                placeholder="Buscar hábito..."
+                            />
+                        </div>
+
+                        {/* Category Filter Chips */}
+                        <div className="filter-chips">
+                            <button
+                                className={`filter-chip ${categoryFilter === 'all' ? 'active' : ''}`}
+                                onClick={() => setCategoryFilter('all')}
+                            >
+                                Todas las áreas
+                            </button>
+                            {CATEGORY_LIST.map(cat => {
+                                const isActive = categoryFilter === cat.id;
+                                return (
+                                    <button
+                                        key={cat.id}
+                                        className={`filter-chip ${isActive ? 'active' : ''}`}
+                                        onClick={() => setCategoryFilter(cat.id)}
+                                        style={isActive ? { backgroundColor: cat.color, borderColor: cat.color, color: 'white' } : {}}
+                                    >
+                                        <span>{cat.emoji}</span> {cat.shortLabel}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
 
-                    <div className="filter-chips">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <button
-                            className={`filter-chip ${periodicityFilter === 'all' ? 'active' : ''}`}
-                            onClick={() => setPeriodicityFilter('all')}
+                            type="button"
+                            onClick={() => setGroupByCategory(prev => !prev)}
+                            className={`filter-chip ${groupByCategory ? 'active' : ''}`}
+                            title="Alternar vista agrupada por categorías de vida"
+                            style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                         >
-                            Todos
-                        </button>
-                        <button
-                            className={`filter-chip ${periodicityFilter === 'daily' ? 'active' : ''}`}
-                            onClick={() => setPeriodicityFilter('daily')}
-                        >
-                            Diarios
-                        </button>
-                        <button
-                            className={`filter-chip ${periodicityFilter === 'weekly' ? 'active' : ''}`}
-                            onClick={() => setPeriodicityFilter('weekly')}
-                        >
-                            Semanales
-                        </button>
-                        <button
-                            className={`filter-chip ${periodicityFilter === 'monthly' ? 'active' : ''}`}
-                            onClick={() => setPeriodicityFilter('monthly')}
-                        >
-                            Mensuales
+                            <Layers size={13} /> {groupByCategory ? 'Agrupado' : 'Sin agrupar'}
                         </button>
                     </div>
                 </div>
@@ -431,115 +496,279 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
                         </thead>
 
                         <tbody>
-                            {filteredTasks.map(task => {
-                                const assignedUser = users.find(u => u.id === task.assignedTo);
-                                const dates = task.completedDates || [];
+                            {filteredTasks.length === 0 ? (
+                                <tr>
+                                    <td colSpan={10} style={{ textAlign: 'center', padding: 'var(--spacing-xl)', color: 'var(--color-text-softer)' }}>
+                                        No se encontraron hábitos con los filtros aplicados.
+                                    </td>
+                                </tr>
+                            ) : groupByCategory && categoryFilter === 'all' ? (
+                                CATEGORY_LIST.map(cat => {
+                                    const catTasks = filteredTasks.filter(t => (t.category || 'salud') === cat.id);
+                                    if (catTasks.length === 0) return null;
+                                    return (
+                                        <React.Fragment key={cat.id}>
+                                            <tr className="category-section-header">
+                                                <td colSpan={10}>
+                                                    <div
+                                                        className="category-header-pill"
+                                                        style={{
+                                                            color: cat.color,
+                                                            backgroundColor: `${cat.color}15`,
+                                                            border: `1px solid ${cat.color}35`
+                                                        }}
+                                                    >
+                                                        <span style={{ fontSize: '1rem' }}>{cat.emoji}</span>
+                                                        <span>{cat.label.toUpperCase()}</span>
+                                                        <span className="category-count">({catTasks.length} {catTasks.length === 1 ? 'hábito' : 'hábitos'})</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {catTasks.map(task => {
+                                                const assignedUser = users.find(u => u.id === task.assignedTo);
+                                                const dates = task.completedDates || [];
+                                                const catMeta = getCategoryMeta(task.category);
 
-                                let completedInWeek = 0;
-                                weekDays.forEach(day => {
-                                    const dStr = format(day, 'yyyy-MM-dd');
-                                    if (dates.includes(dStr)) completedInWeek++;
-                                });
-                                const habitWeeklyPct = Math.round((completedInWeek / 7) * 100);
+                                                let completedInWeek = 0;
+                                                weekDays.forEach(day => {
+                                                    const dStr = format(day, 'yyyy-MM-dd');
+                                                    if (dates.includes(dStr)) completedInWeek++;
+                                                });
+                                                const habitWeeklyPct = Math.round((completedInWeek / 7) * 100);
 
-                                return (
-                                    <tr key={task.id}>
-                                        {/* Habit Details */}
-                                        <td className="cell-habit">
-                                            <div className="habit-title-box">
-                                                <span className="habit-name">{task.title}</span>
-                                                <div className="habit-meta">
-                                                    {assignedUser ? (
+                                                return (
+                                                    <tr key={task.id}>
+                                                        {/* Habit Details */}
+                                                        <td className="cell-habit">
+                                                            <div className="habit-title-box">
+                                                                <span className="habit-name">{task.title}</span>
+                                                                <div className="habit-meta">
+                                                                    <span
+                                                                        className="category-badge"
+                                                                        style={{
+                                                                            backgroundColor: `${catMeta.color}18`,
+                                                                            color: catMeta.color,
+                                                                            border: `1px solid ${catMeta.color}35`
+                                                                        }}
+                                                                    >
+                                                                        {catMeta.emoji} {catMeta.shortLabel}
+                                                                    </span>
+                                                                    {assignedUser ? (
+                                                                        <span
+                                                                            className="user-tag"
+                                                                            style={{
+                                                                                backgroundColor: `${assignedUser.color}20`,
+                                                                                color: assignedUser.color,
+                                                                                border: `1px solid ${assignedUser.color}50`
+                                                                            }}
+                                                                        >
+                                                                            <span style={{ fontSize: '0.85rem' }}>{assignedUser.avatar || '👤'}</span> {assignedUser.name}
+                                                                        </span>
+                                                                    ) : (
+                                                                        <span className="user-tag" style={{ background: 'var(--color-bg-app)', color: 'var(--color-text-softer)' }}>
+                                                                            ✨ Familia
+                                                                        </span>
+                                                                    )}
+                                                                    <span>• {task.periodicity === 'daily' ? 'Diario' : task.periodicity}</span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+
+                                                        {/* 7 Days Checkboxes */}
+                                                        {weekDays.map((day, idx) => {
+                                                            const dStr = format(day, 'yyyy-MM-dd');
+                                                            const isChecked = dates.includes(dStr);
+                                                            const isToday = checkIsToday(day);
+
+                                                            return (
+                                                                <td key={idx} className={`cell-day ${isToday ? 'is-today' : ''}`}>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => handleToggleCheck(task.id, dStr)}
+                                                                        className={`matrix-check-btn ${isChecked ? 'checked' : ''}`}
+                                                                        title={`${task.title} - ${SPANISH_DAYS[idx]} ${format(day, 'd/M')}`}
+                                                                    >
+                                                                        {isChecked && <Check size={18} strokeWidth={3} />}
+                                                                    </button>
+                                                                </td>
+                                                            );
+                                                        })}
+
+                                                        {/* Habit Weekly Progress Bar */}
+                                                        <td>
+                                                            <div className="habit-progress-bar-wrap">
+                                                                <div className="habit-progress-bar-bg">
+                                                                    <div
+                                                                        className="habit-progress-bar-fill"
+                                                                        style={{
+                                                                            width: `${habitWeeklyPct}%`,
+                                                                            background: habitWeeklyPct >= 70 ? 'var(--color-success)' : 'var(--color-primary)'
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                                <span className="habit-progress-label">{completedInWeek}/7</span>
+                                                            </div>
+                                                        </td>
+
+                                                        {/* Actions (Edit and Delete) */}
+                                                        <td style={{ textAlign: 'center' }}>
+                                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                                                                <button
+                                                                    onClick={() => handleOpenEdit(task)}
+                                                                    style={{
+                                                                        background: 'transparent',
+                                                                        color: 'var(--color-text-softer)',
+                                                                        padding: '6px',
+                                                                        borderRadius: '6px'
+                                                                    }}
+                                                                    title="Editar hábito"
+                                                                >
+                                                                    <Edit3 size={15} />
+                                                                </button>
+                                                                {onDelete && (
+                                                                    <button
+                                                                        onClick={() => onDelete(task.id)}
+                                                                        style={{
+                                                                            background: 'transparent',
+                                                                            color: 'var(--color-text-softer)',
+                                                                            padding: '6px',
+                                                                            borderRadius: '6px'
+                                                                        }}
+                                                                        title="Eliminar hábito"
+                                                                    >
+                                                                        <Trash2 size={15} />
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </React.Fragment>
+                                    );
+                                })
+                            ) : (
+                                filteredTasks.map(task => {
+                                    const assignedUser = users.find(u => u.id === task.assignedTo);
+                                    const dates = task.completedDates || [];
+                                    const catMeta = getCategoryMeta(task.category);
+
+                                    let completedInWeek = 0;
+                                    weekDays.forEach(day => {
+                                        const dStr = format(day, 'yyyy-MM-dd');
+                                        if (dates.includes(dStr)) completedInWeek++;
+                                    });
+                                    const habitWeeklyPct = Math.round((completedInWeek / 7) * 100);
+
+                                    return (
+                                        <tr key={task.id}>
+                                            {/* Habit Details */}
+                                            <td className="cell-habit">
+                                                <div className="habit-title-box">
+                                                    <span className="habit-name">{task.title}</span>
+                                                    <div className="habit-meta">
                                                         <span
-                                                            className="user-tag"
+                                                            className="category-badge"
                                                             style={{
-                                                                backgroundColor: `${assignedUser.color}20`,
-                                                                color: assignedUser.color,
-                                                                border: `1px solid ${assignedUser.color}50`
+                                                                backgroundColor: `${catMeta.color}18`,
+                                                                color: catMeta.color,
+                                                                border: `1px solid ${catMeta.color}35`
                                                             }}
                                                         >
-                                                            <User size={10} /> {assignedUser.name}
+                                                            {catMeta.emoji} {catMeta.shortLabel}
                                                         </span>
-                                                    ) : (
-                                                        <span className="user-tag" style={{ background: 'var(--color-bg-app)', color: 'var(--color-text-softer)' }}>
-                                                            General
-                                                        </span>
-                                                    )}
-                                                    <span>• {task.periodicity === 'daily' ? 'Diario' : task.periodicity}</span>
+                                                        {assignedUser ? (
+                                                            <span
+                                                                className="user-tag"
+                                                                style={{
+                                                                    backgroundColor: `${assignedUser.color}20`,
+                                                                    color: assignedUser.color,
+                                                                    border: `1px solid ${assignedUser.color}50`
+                                                                }}
+                                                            >
+                                                                <span style={{ fontSize: '0.85rem' }}>{assignedUser.avatar || '👤'}</span> {assignedUser.name}
+                                                            </span>
+                                                        ) : (
+                                                            <span className="user-tag" style={{ background: 'var(--color-bg-app)', color: 'var(--color-text-softer)' }}>
+                                                                ✨ Familia
+                                                            </span>
+                                                        )}
+                                                        <span>• {task.periodicity === 'daily' ? 'Diario' : task.periodicity}</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
+                                            </td>
 
-                                        {/* 7 Days Checkboxes */}
-                                        {weekDays.map((day, idx) => {
-                                            const dStr = format(day, 'yyyy-MM-dd');
-                                            const isChecked = dates.includes(dStr);
-                                            const isToday = checkIsToday(day);
+                                            {/* 7 Days Checkboxes */}
+                                            {weekDays.map((day, idx) => {
+                                                const dStr = format(day, 'yyyy-MM-dd');
+                                                const isChecked = dates.includes(dStr);
+                                                const isToday = checkIsToday(day);
 
-                                            return (
-                                                <td key={idx} className={`cell-day ${isToday ? 'is-today' : ''}`}>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleToggleCheck(task.id, dStr)}
-                                                        className={`matrix-check-btn ${isChecked ? 'checked' : ''}`}
-                                                        title={`${task.title} - ${SPANISH_DAYS[idx]} ${format(day, 'd/M')}`}
-                                                    >
-                                                        {isChecked && <Check size={18} strokeWidth={3} />}
-                                                    </button>
-                                                </td>
-                                            );
-                                        })}
+                                                return (
+                                                    <td key={idx} className={`cell-day ${isToday ? 'is-today' : ''}`}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleToggleCheck(task.id, dStr)}
+                                                            className={`matrix-check-btn ${isChecked ? 'checked' : ''}`}
+                                                            title={`${task.title} - ${SPANISH_DAYS[idx]} ${format(day, 'd/M')}`}
+                                                        >
+                                                            {isChecked && <Check size={18} strokeWidth={3} />}
+                                                        </button>
+                                                    </td>
+                                                );
+                                            })}
 
-                                        {/* Habit Weekly Progress Bar */}
-                                        <td>
-                                            <div className="habit-progress-bar-wrap">
-                                                <div className="habit-progress-bar-bg">
-                                                    <div
-                                                        className="habit-progress-bar-fill"
-                                                        style={{
-                                                            width: `${habitWeeklyPct}%`,
-                                                            background: habitWeeklyPct >= 70 ? 'var(--color-success)' : 'var(--color-primary)'
-                                                        }}
-                                                    />
+                                            {/* Habit Weekly Progress Bar */}
+                                            <td>
+                                                <div className="habit-progress-bar-wrap">
+                                                    <div className="habit-progress-bar-bg">
+                                                        <div
+                                                            className="habit-progress-bar-fill"
+                                                            style={{
+                                                                width: `${habitWeeklyPct}%`,
+                                                                background: habitWeeklyPct >= 70 ? 'var(--color-success)' : 'var(--color-primary)'
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <span className="habit-progress-label">{completedInWeek}/7</span>
                                                 </div>
-                                                <span className="habit-progress-label">{completedInWeek}/7</span>
-                                            </div>
-                                        </td>
+                                            </td>
 
-                                        {/* Actions (Edit and Delete) */}
-                                        <td style={{ textAlign: 'center' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                                                <button
-                                                    onClick={() => handleOpenEdit(task)}
-                                                    style={{
-                                                        background: 'transparent',
-                                                        color: 'var(--color-text-softer)',
-                                                        padding: '6px',
-                                                        borderRadius: '6px'
-                                                    }}
-                                                    title="Editar hábito"
-                                                >
-                                                    <Edit3 size={15} />
-                                                </button>
-                                                {onDelete && (
+                                            {/* Actions (Edit and Delete) */}
+                                            <td style={{ textAlign: 'center' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
                                                     <button
-                                                        onClick={() => onDelete(task.id)}
+                                                        onClick={() => handleOpenEdit(task)}
                                                         style={{
                                                             background: 'transparent',
                                                             color: 'var(--color-text-softer)',
                                                             padding: '6px',
                                                             borderRadius: '6px'
                                                         }}
-                                                        title="Eliminar hábito"
+                                                        title="Editar hábito"
                                                     >
-                                                        <Trash2 size={15} />
+                                                        <Edit3 size={15} />
                                                     </button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                                                    {onDelete && (
+                                                        <button
+                                                            onClick={() => onDelete(task.id)}
+                                                            style={{
+                                                                background: 'transparent',
+                                                                color: 'var(--color-text-softer)',
+                                                                padding: '6px',
+                                                                borderRadius: '6px'
+                                                            }}
+                                                            title="Eliminar hábito"
+                                                        >
+                                                            <Trash2 size={15} />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            )}
 
                             {filteredTasks.length === 0 && (
                                 <tr>
