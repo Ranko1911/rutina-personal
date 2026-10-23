@@ -20,19 +20,35 @@ import {
     User,
     Calendar,
     Trash2,
-    Award
+    Award,
+    Search,
+    Edit3,
+    Sparkles
 } from 'lucide-react';
-import { AddTaskModal } from './AddTaskModal';
+import { TaskFormModal } from './TaskFormModal';
+import { soundFx } from '../utils/sound';
+import { launchConfetti } from '../utils/confetti';
 import '../styles/habits.css';
 
 const SPANISH_DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
-export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) => {
+const MOTIVATIONAL_QUOTES = [
+    "“Somos lo que hacemos día a día. De modo que la excelencia no es un acto sino un hábito.” — Aristóteles",
+    "“La disciplina es el puente entre las metas y los logros.” — Jim Rohn",
+    "“No cuentes los días, haz que los días cuenten.” — Muhammad Ali",
+    "“La motivación te pone en marcha; el hábito te mantiene constante.” — Jim Ryun",
+    "“Los pequeños hábitos repetidos diariamente producen transformaciones extraordinarias.” — James Clear"
+];
+
+export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDelete }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [taskToEdit, setTaskToEdit] = useState(null);
     const [selectedUserFilter, setSelectedUserFilter] = useState('all');
+    const [periodicityFilter, setPeriodicityFilter] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
 
-    // 1. Calculate the 7 days of the currently selected week (Monday to Sunday)
+    // Week calculation (Monday to Sunday)
     const weekDays = useMemo(() => {
         const start = startOfWeek(currentDate, { weekStartsOn: 1 });
         const end = endOfWeek(currentDate, { weekStartsOn: 1 });
@@ -46,13 +62,23 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
 
     const todayStr = format(new Date(), 'yyyy-MM-dd');
 
-    // Filter tasks by user if selected
-    const filteredTasks = useMemo(() => {
-        if (selectedUserFilter === 'all') return tasks;
-        return tasks.filter(t => t.assignedTo === selectedUserFilter);
-    }, [tasks, selectedUserFilter]);
+    // Quote of the day (based on current day of month)
+    const quoteOfTheDay = useMemo(() => {
+        const dayOfMonth = new Date().getDate();
+        return MOTIVATIONAL_QUOTES[dayOfMonth % MOTIVATIONAL_QUOTES.length];
+    }, []);
 
-    // 2. Metrics & Gamification Calculations
+    // Filter tasks by user, periodicity, and search query
+    const filteredTasks = useMemo(() => {
+        return tasks.filter(t => {
+            const matchUser = selectedUserFilter === 'all' || t.assignedTo === selectedUserFilter;
+            const matchPeriod = periodicityFilter === 'all' || t.periodicity === periodicityFilter;
+            const matchSearch = !searchQuery.trim() || t.title.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchUser && matchPeriod && matchSearch;
+        });
+    }, [tasks, selectedUserFilter, periodicityFilter, searchQuery]);
+
+    // Metrics & Gamification Calculations
     const metrics = useMemo(() => {
         const total = filteredTasks.length;
         if (total === 0) {
@@ -69,11 +95,9 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
             };
         }
 
-        // Today's metrics
         const todayCompleted = filteredTasks.filter(t => (t.completedDates || []).includes(todayStr)).length;
         const todayPct = Math.round((todayCompleted / total) * 100);
 
-        // Week's metrics
         const weekDatesStr = weekDays.map(d => format(d, 'yyyy-MM-dd'));
         let weekChecks = 0;
         filteredTasks.forEach(task => {
@@ -86,12 +110,11 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
         const weekTotalPossible = total * 7;
         const weekPct = Math.round((weekChecks / weekTotalPossible) * 100);
 
-        // Streak calculation (consecutive days with at least 1 habit completed)
+        // Streak calculation
         let streak = 0;
         let testDate = new Date();
         const hasToday = tasks.some(t => (t.completedDates || []).includes(todayStr));
         if (!hasToday) {
-            // Check if streak is alive from yesterday
             testDate = subDays(testDate, 1);
         }
 
@@ -106,7 +129,6 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
             }
         }
 
-        // Gamification Points & Level
         const points = (weekChecks * 15) + (streak * 20);
         let level = 'Iniciado 🌱';
         if (points >= 350) level = 'Modo Dios 👑';
@@ -126,6 +148,38 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
         };
     }, [filteredTasks, tasks, todayStr, weekDays]);
 
+    // Handle check click with sensory feedback
+    const handleToggleCheck = (taskId, dStr) => {
+        soundFx.playCheck();
+        onToggleDate(taskId, dStr);
+
+        const targetTask = tasks.find(t => t.id === taskId);
+        const wasChecked = (targetTask?.completedDates || []).includes(dStr);
+
+        // If completing a task today reaches 100% of all tasks, trigger celebration
+        if (!wasChecked && dStr === todayStr) {
+            const upcomingCompleted = metrics.todayCompleted + 1;
+            if (upcomingCompleted >= metrics.todayTotal && metrics.todayTotal > 0) {
+                soundFx.playCelebration();
+                launchConfetti();
+            }
+        }
+    };
+
+    const handleOpenEdit = (task) => {
+        setTaskToEdit(task);
+        setIsModalOpen(true);
+    };
+
+    const handleSaveTask = (...args) => {
+        if (taskToEdit && onUpdate) {
+            onUpdate(args[0], args[1]);
+        } else {
+            onAdd(args[0], args[1], args[2], args[3]);
+        }
+        setTaskToEdit(null);
+    };
+
     // SVG Donut calculation
     const radius = 54;
     const circumference = 2 * Math.PI * radius;
@@ -141,7 +195,6 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
         });
     }, [weekDays, filteredTasks]);
 
-    // Format header date range
     const weekRangeLabel = useMemo(() => {
         const start = weekDays[0];
         const end = weekDays[6];
@@ -150,6 +203,16 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
 
     return (
         <div className="tracker-container">
+            {/* Motivation Quote Banner */}
+            <div className="motivation-banner">
+                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Sparkles size={16} color="var(--color-primary)" /> {quoteOfTheDay}
+                </span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--color-text-softer)', fontWeight: 600 }}>
+                    HogarTasks Pro
+                </span>
+            </div>
+
             {/* Header with week navigation */}
             <div className="tracker-header">
                 <div>
@@ -162,7 +225,6 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
-                    {/* Week Navigator */}
                     <div className="week-navigator">
                         <button className="week-nav-btn" onClick={prevWeek} title="Semana anterior">
                             <ChevronLeft size={18} />
@@ -187,7 +249,7 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
 
                     <button
                         className="btn-primary"
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => { setTaskToEdit(null); setIsModalOpen(true); }}
                         style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}
                     >
                         <Plus size={18} /> Nuevo Hábito
@@ -261,7 +323,7 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                     </div>
                 </div>
 
-                {/* KPI: Nivel y Puntos de Disciplina */}
+                {/* KPI: Puntuación de Disciplina */}
                 <div className="kpi-card">
                     <div className="kpi-top">
                         <span className="kpi-label">Puntuación de Disciplina</span>
@@ -278,8 +340,9 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                 </div>
             </div>
 
-            {/* Matrix Table: Weekly Grid */}
+            {/* Matrix Card */}
             <div className="matrix-card">
+                {/* Header bar with member filter */}
                 <div className="matrix-card-header">
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-md)' }}>
                         <span style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--color-text-main)' }}>
@@ -290,9 +353,8 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                         </span>
                     </div>
 
-                    {/* Filter by assigned user */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
-                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-softer)' }}>Filtrar:</span>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-softer)' }}>Filtrar Miembro:</span>
                         <select
                             value={selectedUserFilter}
                             onChange={(e) => setSelectedUserFilter(e.target.value)}
@@ -306,6 +368,46 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                     </div>
                 </div>
 
+                {/* Search and Periodicity Toolbar */}
+                <div className="matrix-toolbar">
+                    <div className="search-input-box">
+                        <Search size={16} color="var(--color-text-softer)" />
+                        <input
+                            value={searchQuery}
+                            onChange={e => setSearchQuery(e.target.value)}
+                            placeholder="Buscar hábito..."
+                        />
+                    </div>
+
+                    <div className="filter-chips">
+                        <button
+                            className={`filter-chip ${periodicityFilter === 'all' ? 'active' : ''}`}
+                            onClick={() => setPeriodicityFilter('all')}
+                        >
+                            Todos
+                        </button>
+                        <button
+                            className={`filter-chip ${periodicityFilter === 'daily' ? 'active' : ''}`}
+                            onClick={() => setPeriodicityFilter('daily')}
+                        >
+                            Diarios
+                        </button>
+                        <button
+                            className={`filter-chip ${periodicityFilter === 'weekly' ? 'active' : ''}`}
+                            onClick={() => setPeriodicityFilter('weekly')}
+                        >
+                            Semanales
+                        </button>
+                        <button
+                            className={`filter-chip ${periodicityFilter === 'monthly' ? 'active' : ''}`}
+                            onClick={() => setPeriodicityFilter('monthly')}
+                        >
+                            Mensuales
+                        </button>
+                    </div>
+                </div>
+
+                {/* Table */}
                 <div className="matrix-table-container">
                     <table className="matrix-table">
                         <thead>
@@ -324,7 +426,7 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                                     );
                                 })}
                                 <th style={{ minWidth: '130px', textAlign: 'center' }}>Progreso Semanal</th>
-                                <th style={{ width: '40px' }}></th>
+                                <th style={{ width: '70px', textAlign: 'center' }}>Acciones</th>
                             </tr>
                         </thead>
 
@@ -333,7 +435,6 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                                 const assignedUser = users.find(u => u.id === task.assignedTo);
                                 const dates = task.completedDates || [];
 
-                                // Count completed days in this active week
                                 let completedInWeek = 0;
                                 weekDays.forEach(day => {
                                     const dStr = format(day, 'yyyy-MM-dd');
@@ -360,7 +461,7 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                                                             <User size={10} /> {assignedUser.name}
                                                         </span>
                                                     ) : (
-                                                        <span className="user-tag" style={{ background: '#f0f0f0', color: '#777' }}>
+                                                        <span className="user-tag" style={{ background: 'var(--color-bg-app)', color: 'var(--color-text-softer)' }}>
                                                             General
                                                         </span>
                                                     )}
@@ -379,7 +480,7 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                                                 <td key={idx} className={`cell-day ${isToday ? 'is-today' : ''}`}>
                                                     <button
                                                         type="button"
-                                                        onClick={() => onToggleDate(task.id, dStr)}
+                                                        onClick={() => handleToggleCheck(task.id, dStr)}
                                                         className={`matrix-check-btn ${isChecked ? 'checked' : ''}`}
                                                         title={`${task.title} - ${SPANISH_DAYS[idx]} ${format(day, 'd/M')}`}
                                                     >
@@ -405,22 +506,36 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                                             </div>
                                         </td>
 
-                                        {/* Delete action */}
+                                        {/* Actions (Edit and Delete) */}
                                         <td style={{ textAlign: 'center' }}>
-                                            {onDelete && (
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
                                                 <button
-                                                    onClick={() => onDelete(task.id)}
+                                                    onClick={() => handleOpenEdit(task)}
                                                     style={{
                                                         background: 'transparent',
                                                         color: 'var(--color-text-softer)',
-                                                        padding: '4px',
+                                                        padding: '6px',
                                                         borderRadius: '6px'
                                                     }}
-                                                    title="Eliminar hábito"
+                                                    title="Editar hábito"
                                                 >
-                                                    <Trash2 size={16} />
+                                                    <Edit3 size={15} />
                                                 </button>
-                                            )}
+                                                {onDelete && (
+                                                    <button
+                                                        onClick={() => onDelete(task.id)}
+                                                        style={{
+                                                            background: 'transparent',
+                                                            color: 'var(--color-text-softer)',
+                                                            padding: '6px',
+                                                            borderRadius: '6px'
+                                                        }}
+                                                        title="Eliminar hábito"
+                                                    >
+                                                        <Trash2 size={15} />
+                                                    </button>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 );
@@ -429,7 +544,7 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                             {filteredTasks.length === 0 && (
                                 <tr>
                                     <td colSpan={10} style={{ textAlign: 'center', padding: 'var(--spacing-xl)', color: 'var(--color-text-softer)' }}>
-                                        No hay hábitos registrados para este filtro. ¡Pulsa "+ Nuevo Hábito" para añadir uno!
+                                        No se encontraron hábitos con los filtros aplicados.
                                     </td>
                                 </tr>
                             )}
@@ -462,11 +577,12 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onDelete }) =>
                 </div>
             </div>
 
-            {/* Modal for adding a new task / habit */}
-            <AddTaskModal
+            {/* Task / Habit Modal */}
+            <TaskFormModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                onAdd={onAdd}
+                onClose={() => { setIsModalOpen(false); setTaskToEdit(null); }}
+                onSave={handleSaveTask}
+                taskToEdit={taskToEdit}
                 users={users}
             />
         </div>

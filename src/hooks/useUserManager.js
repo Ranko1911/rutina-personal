@@ -26,5 +26,9 @@ export const useUserManager = () => {
         storage.saveUsers(updatedUsers);
     };
 
-    return { users, addUser, removeUser };
+    const reloadUsers = () => {
+        setUsers(storage.getUsers());
+    };
+
+    return { users, addUser, removeUser, reloadUsers };
 };

@@ -78,6 +78,12 @@
     color: var(--color-text-softer);
 }
 
+.dark .heatmap-level-0 {
+    background: hsl(225, 20%, 18%);
+    color: var(--color-text-softer);
+    border-color: hsl(225, 18%, 24%);
+}
+
 .heatmap-level-1 {
     background: hsl(150, 60%, 85%);
     color: hsl(150, 70%, 25%);
@@ -150,6 +156,11 @@
     border-radius: var(--radius-md);
     background: hsl(var(--primary-hue), 15%, 98%);
     border: 1px solid var(--color-border);
+}
+
+.dark .user-rank-item {
+    background: hsl(225, 20%, 16%);
+    border-color: var(--color-border);
 }
 
 .user-badge-large {

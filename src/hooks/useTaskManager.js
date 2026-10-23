@@ -127,11 +127,32 @@ export const useTaskManager = () => {
         toggleTaskForDate(taskId, todayStr);
     };
 
+    const updateTask = (taskId, fields) => {
+        const updatedTasks = tasks.map(t => {
+            if (t.id === taskId) {
+                return {
+                    ...t,
+                    ...fields,
+                    customInterval: fields.customInterval !== undefined ? parseInt(fields.customInterval, 10) || 1 : t.customInterval
+                };
+            }
+            return t;
+        });
+        setTasks(updatedTasks);
+        storage.saveTasks(updatedTasks);
+    };
+
+    const reloadTasks = () => {
+        const loaded = storage.getTasks();
+        const refreshed = checkPeriodicity(loaded);
+        setTasks(refreshed);
+    };
+
     const deleteTask = (taskId) => {
         const updatedTasks = tasks.filter(t => t.id !== taskId);
         setTasks(updatedTasks);
         storage.saveTasks(updatedTasks);
     };
 
-    return { tasks, addTask, toggleTask, toggleTaskForDate, deleteTask };
+    return { tasks, addTask, updateTask, toggleTask, toggleTaskForDate, deleteTask, reloadTasks };
 };

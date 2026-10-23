@@ -1,21 +1,22 @@
 :root {
   /* HSL Colors - Premium Palette */
   --primary-hue: 250;
-  --primary-sat: 60%;
-  --primary-light: 65%;
+  --primary-sat: 75%;
+  --primary-light: 62%;
   
   --color-primary: hsl(var(--primary-hue), var(--primary-sat), var(--primary-light));
-  --color-primary-dark: hsl(var(--primary-hue), var(--primary-sat), 40%);
-  --color-primary-light: hsl(var(--primary-hue), var(--primary-sat), 85%);
+  --color-primary-dark: hsl(var(--primary-hue), var(--primary-sat), 45%);
+  --color-primary-light: hsl(var(--primary-hue), var(--primary-sat), 92%);
   
   --color-bg-app: hsl(220, 20%, 97%);
   --color-bg-card: hsl(0, 0%, 100%);
-  --color-text-main: hsl(220, 15%, 20%);
-  --color-text-softer: hsl(220, 10%, 45%);
-  --color-border: hsl(220, 15%, 90%);
+  --color-text-main: hsl(220, 25%, 15%);
+  --color-text-softer: hsl(220, 12%, 48%);
+  --color-border: hsl(220, 15%, 88%);
   
-  --color-success: hsl(150, 50%, 45%);
-  --color-warning: hsl(35, 90%, 60%);
+  --color-success: hsl(152, 65%, 42%);
+  --color-warning: hsl(35, 95%, 55%);
+  --color-danger: hsl(354, 80%, 58%);
   
   /* Spacing */
   --spacing-xs: 0.25rem;
@@ -26,15 +27,14 @@
   
   /* Radius */
   --radius-sm: 8px;
-  --radius-md: 12px;
+  --radius-md: 14px;
   --radius-lg: 20px;
   --radius-pill: 9999px;
   
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.025);
-  --shadow-floating: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.02);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 4px 8px -2px rgba(0, 0, 0, 0.03);
   
   /* Transitions */
   --transition-fast: 0.15s ease;
@@ -42,9 +42,17 @@
 }
 
 .dark {
-  --color-bg-app: hsl(220, 15%, 10%);
-  --color-bg-card: hsl(220, 15%, 16%);
-  --color-text-main: hsl(220, 20%, 95%);
-  --color-text-softer: hsl(220, 15%, 70%);
-  --color-border: hsl(220, 15%, 25%);
+  --color-bg-app: hsl(225, 25%, 9%);
+  --color-bg-card: hsl(225, 22%, 14%);
+  --color-primary-light: hsl(var(--primary-hue), 50%, 22%);
+  --color-primary-dark: hsl(var(--primary-hue), 80%, 75%);
+  --color-text-main: hsl(220, 25%, 96%);
+  --color-text-softer: hsl(220, 15%, 68%);
+  --color-border: hsl(225, 18%, 22%);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+body, aside, .card, .matrix-card, .analytics-card, .kpi-card, .donut-card {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }

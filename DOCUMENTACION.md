@@ -66,6 +66,26 @@ En la parte superior de la vista de hábitos se calculan en vivo tus estadístic
 * Puedes añadir nuevos integrantes introduciendo su nombre.
 * La aplicación les asigna un color HSL único y un avatar distintivo para identificar visualmente sus tareas en toda la plataforma.
 
+### 1.5. Tema Oscuro / Claro y Accesibilidad
+* Usa el botón de alternancia rápida en la parte inferior del menú lateral (**Claro / Oscuro**) o accede a la ventana de **Configuración**.
+* La preferencia se guarda automáticamente y adapta de forma inmediata todas las paletas, tablas y contrastes de color.
+
+### 1.6. Feedback Auditivo y Celebraciones (Confeti)
+* **Chime Sonoro**: Cada vez que marcas un hábito, el sintetizador nativo Web Audio emite un tono sutil y agradable.
+* **Celebración 100%**: Cuando completas todos los hábitos de la jornada, se dispara una fanfarria armónica y una lluvia de confeti en pantalla.
+* Los efectos sonoros pueden silenciarse o activarse en cualquier momento desde la ventana de Configuración.
+
+### 1.7. Copias de Seguridad e Importación (JSON)
+* Haz clic en el icono de engranaje (**⚙️ Configuración**) en la barra lateral.
+* **Exportar Datos a JSON**: Genera una descarga inmediata con todas tus tareas, histórico de fechas completadas y usuarios configurados.
+* **Importar Copia de Seguridad**: Carga cualquier archivo JSON previamente exportado para restaurar tu progreso o migrar de dispositivo.
+* **Reinicio de Fábrica**: Opción protegida para restablecer la aplicación con hábitos de ejemplo.
+
+### 1.8. Búsqueda y Edición de Hábitos
+* **Búsqueda en tiempo real**: Utiliza el campo de búsqueda integrado en la cabecera de la matriz para filtrar al instante por título.
+* **Filtros por frecuencia**: Filtra rápidamente entre *Todos, Diarios, Semanales o Mensuales*.
+* **Editar Hábito**: Pulsa el icono de lápiz en cualquier fila para corregir el nombre, reasignar responsable o modificar la frecuencia sin perder el historial.
+
 ---
 
 ## 2. Guía de Configuración y Desarrollo

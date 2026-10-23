@@ -1,7 +1,7 @@
 import React from 'react';
-import { LayoutDashboard, CheckSquare, Calendar, Users, Settings, Flame, BarChart2 } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Calendar, Users, Settings, Flame, BarChart2, Sun, Moon } from 'lucide-react';
 
-export const Layout = ({ children, activeTab, onTabChange }) => {
+export const Layout = ({ children, activeTab, onTabChange, isDark, onToggleTheme, onOpenSettings }) => {
     return (
         <div className="layout" style={{ display: 'flex', minHeight: '100vh' }}>
             <aside style={{
@@ -39,8 +39,51 @@ export const Layout = ({ children, activeTab, onTabChange }) => {
                     <NavItem icon={<CheckSquare size={20} />} label="Todas/Custom" active={activeTab === 'custom'} onClick={() => onTabChange('custom')} />
                 </nav>
 
-                <div style={{ marginTop: 'auto' }}>
+                <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xs)', borderTop: '1px solid var(--color-border)', paddingTop: 'var(--spacing-md)' }}>
                     <NavItem icon={<Users size={20} />} label="Usuarios" active={activeTab === 'users'} onClick={() => onTabChange('users')} />
+                    
+                    {/* Theme and Settings Controls */}
+                    <div style={{ display: 'flex', gap: '6px', marginTop: '6px' }}>
+                        <button
+                            onClick={onToggleTheme}
+                            title={`Cambiar a tema ${isDark ? 'claro' : 'oscuro'}`}
+                            style={{
+                                flex: 1,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '6px',
+                                padding: '8px',
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                                background: 'var(--color-bg-app)',
+                                color: 'var(--color-text-main)',
+                                border: '1px solid var(--color-border)',
+                                borderRadius: 'var(--radius-sm)'
+                            }}
+                        >
+                            {isDark ? <Sun size={16} color="var(--color-warning)" /> : <Moon size={16} color="var(--color-primary)" />}
+                            {isDark ? 'Claro' : 'Oscuro'}
+                        </button>
+
+                        <button
+                            onClick={onOpenSettings}
+                            title="Configuración y Copias de Seguridad"
+                            style={{
+                                width: '38px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: '8px',
+                                background: 'var(--color-bg-app)',
+                                color: 'var(--color-text-softer)',
+                                border: '1px solid var(--color-border)',
+                                borderRadius: 'var(--radius-sm)'
+                            }}
+                        >
+                            <Settings size={18} />
+                        </button>
+                    </div>
                 </div>
             </aside>
 
