@@ -187,7 +187,15 @@ export const SettingsModal = ({ isOpen, onClose, isDark, onToggleTheme, onDataRe
                                 value={pastedCode}
                                 onChange={e => setPastedCode(e.target.value)}
                                 placeholder="Pegar código de otro dispositivo aquí..."
-                                style={{ flex: 1, fontSize: '0.8rem', padding: '6px 10px' }}
+                                style={{
+                                    flex: 1,
+                                    fontSize: '0.8rem',
+                                    padding: '8px 12px',
+                                    background: 'var(--color-bg-app)',
+                                    color: 'var(--color-text-main)',
+                                    border: '1px solid var(--color-border)',
+                                    borderRadius: 'var(--radius-sm)'
+                                }}
                             />
                             <button
                                 type="submit"

@@ -597,12 +597,8 @@
     box-shadow: var(--shadow-sm);
 }
 
-.dark .category-header-pill {
-    background: hsl(var(--primary-hue), 25%, 16%) !important;
-}
-
 .category-count {
-    opacity: 0.75;
+    opacity: 0.85;
     font-weight: 600;
     font-size: 0.75rem;
 }

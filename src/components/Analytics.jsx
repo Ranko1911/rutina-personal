@@ -191,7 +191,7 @@ export const Analytics = ({ tasks, users }) => {
                         <span style={{ fontSize: '0.85rem', color: 'var(--color-text-softer)', fontWeight: 500 }}>
                             Día Más Productivo
                         </span>
-                        <div style={{ padding: '8px', borderRadius: '10px', background: 'hsl(35, 100%, 93%)', color: 'hsl(35, 95%, 45%)' }}>
+                        <div style={{ padding: '8px', borderRadius: '10px', background: 'hsla(35, 95%, 50%, 0.18)', color: 'hsl(35, 95%, 55%)' }}>
                             <Flame size={20} />
                         </div>
                     </div>
@@ -208,14 +208,14 @@ export const Analytics = ({ tasks, users }) => {
                         <span style={{ fontSize: '0.85rem', color: 'var(--color-text-softer)', fontWeight: 500 }}>
                             Miembro Más Activo
                         </span>
-                        <div style={{ padding: '8px', borderRadius: '10px', background: 'hsl(280, 80%, 95%)', color: 'hsl(280, 80%, 50%)' }}>
+                        <div style={{ padding: '8px', borderRadius: '10px', background: 'hsla(280, 80%, 60%, 0.18)', color: 'hsl(280, 80%, 65%)' }}>
                             <Award size={20} />
                         </div>
                     </div>
                     <div style={{ fontSize: '1.6rem', fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {stats.memberStats[0]?.name || 'N/A'}
                     </div>
-                    <span style={{ fontSize: '0.78rem', color: 'hsl(280, 80%, 50%)', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.78rem', color: 'var(--color-primary)', fontWeight: 600 }}>
                         {stats.memberStats[0]?.completionsCount || 0} checks completados
                     </span>
                 </div>
@@ -257,7 +257,7 @@ export const Analytics = ({ tasks, users }) => {
                         {/* Legend */}
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px', fontSize: '0.72rem', color: 'var(--color-text-softer)', marginTop: '8px' }}>
                             <span>Menos</span>
-                            <span style={{ width: '12px', height: '12px', borderRadius: '3px', background: 'hsl(var(--primary-hue), 10%, 96%)', border: '1px solid var(--color-border)' }}></span>
+                            <span style={{ width: '12px', height: '12px', borderRadius: '3px', background: 'var(--color-border)' }}></span>
                             <span style={{ width: '12px', height: '12px', borderRadius: '3px', background: 'hsl(150, 60%, 85%)' }}></span>
                             <span style={{ width: '12px', height: '12px', borderRadius: '3px', background: 'hsl(150, 65%, 65%)' }}></span>
                             <span style={{ width: '12px', height: '12px', borderRadius: '3px', background: 'hsl(150, 70%, 45%)' }}></span>
@@ -386,20 +386,20 @@ export const Analytics = ({ tasks, users }) => {
                         Distribución por Periodicidad
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-sm)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'hsl(var(--primary-hue), 15%, 98%)', borderRadius: '8px' }}>
-                            <span style={{ fontWeight: 600 }}>Hábitos Diarios</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--color-bg-app)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)' }}>
+                            <span style={{ fontWeight: 600, color: 'var(--color-text-main)' }}>Hábitos Diarios</span>
                             <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>{stats.periodicityStats.daily}</span>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'hsl(var(--primary-hue), 15%, 98%)', borderRadius: '8px' }}>
-                            <span style={{ fontWeight: 600 }}>Tareas Semanales</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--color-bg-app)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)' }}>
+                            <span style={{ fontWeight: 600, color: 'var(--color-text-main)' }}>Tareas Semanales</span>
                             <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>{stats.periodicityStats.weekly}</span>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'hsl(var(--primary-hue), 15%, 98%)', borderRadius: '8px' }}>
-                            <span style={{ fontWeight: 600 }}>Tareas Mensuales</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--color-bg-app)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)' }}>
+                            <span style={{ fontWeight: 600, color: 'var(--color-text-main)' }}>Tareas Mensuales</span>
                             <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>{stats.periodicityStats.monthly}</span>
                         </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'hsl(var(--primary-hue), 15%, 98%)', borderRadius: '8px' }}>
-                            <span style={{ fontWeight: 600 }}>Personalizadas / Puntuales</span>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--color-bg-app)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-sm)' }}>
+                            <span style={{ fontWeight: 600, color: 'var(--color-text-main)' }}>Personalizadas / Puntuales</span>
                             <span style={{ fontWeight: 700, color: 'var(--color-primary)' }}>{stats.periodicityStats.custom}</span>
                         </div>
                     </div>

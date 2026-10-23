@@ -59,3 +59,12 @@ export const getCategoryMeta = (categoryId) => {
         darkBg: 'var(--color-bg-app)'
     };
 };
+
+// Helper for translucent tints in both light and dark modes
+export const hslWithAlpha = (hslString, alpha = 0.2) => {
+    if (!hslString) return 'transparent';
+    if (hslString.startsWith('hsl(')) {
+        return hslString.replace('hsl(', 'hsla(').replace(')', `, ${alpha})`);
+    }
+    return hslString;
+};

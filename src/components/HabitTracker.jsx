@@ -28,8 +28,7 @@ import {
 } from 'lucide-react';
 import { TaskFormModal } from './TaskFormModal';
 import { soundFx } from '../utils/sound';
-import { launchConfetti } from '../utils/confetti';
-import { CATEGORY_LIST, getCategoryMeta } from '../utils/categories';
+import { CATEGORY_LIST, getCategoryMeta, hslWithAlpha } from '../utils/categories';
 import '../styles/habits.css';
 
 const SPANISH_DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
@@ -449,7 +448,14 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
                         <select
                             value={selectedUserFilter}
                             onChange={(e) => setSelectedUserFilter(e.target.value)}
-                            style={{ padding: '4px 10px', fontSize: '0.85rem' }}
+                            style={{
+                                padding: '5px 12px',
+                                fontSize: '0.82rem',
+                                background: 'var(--color-bg-app)',
+                                color: 'var(--color-text-main)',
+                                border: '1px solid var(--color-border)',
+                                borderRadius: 'var(--radius-sm)'
+                            }}
                         >
                             <option value="all">Todos los miembros</option>
                             {users.map(u => (
@@ -550,8 +556,8 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
                                                         className="category-header-pill"
                                                         style={{
                                                             color: cat.color,
-                                                            backgroundColor: `${cat.color}15`,
-                                                            border: `1px solid ${cat.color}35`
+                                                            backgroundColor: hslWithAlpha(cat.color, 0.16),
+                                                            border: `1px solid ${hslWithAlpha(cat.color, 0.38)}`
                                                         }}
                                                     >
                                                         <span style={{ fontSize: '1rem' }}>{cat.emoji}</span>
@@ -582,9 +588,9 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
                                                                     <span
                                                                         className="category-badge"
                                                                         style={{
-                                                                            backgroundColor: `${catMeta.color}18`,
+                                                                            backgroundColor: hslWithAlpha(catMeta.color, 0.16),
                                                                             color: catMeta.color,
-                                                                            border: `1px solid ${catMeta.color}35`
+                                                                            border: `1px solid ${hslWithAlpha(catMeta.color, 0.35)}`
                                                                         }}
                                                                     >
                                                                         {catMeta.emoji} {catMeta.shortLabel}
@@ -593,9 +599,9 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
                                                                         <span
                                                                             className="user-tag"
                                                                             style={{
-                                                                                backgroundColor: `${assignedUser.color}20`,
+                                                                                backgroundColor: hslWithAlpha(assignedUser.color, 0.16),
                                                                                 color: assignedUser.color,
-                                                                                border: `1px solid ${assignedUser.color}50`
+                                                                                border: `1px solid ${hslWithAlpha(assignedUser.color, 0.38)}`
                                                                             }}
                                                                         >
                                                                             <span style={{ fontSize: '0.85rem' }}>{assignedUser.avatar || '👤'}</span> {assignedUser.name}
@@ -706,9 +712,9 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
                                                         <span
                                                             className="category-badge"
                                                             style={{
-                                                                backgroundColor: `${catMeta.color}18`,
+                                                                backgroundColor: hslWithAlpha(catMeta.color, 0.16),
                                                                 color: catMeta.color,
-                                                                border: `1px solid ${catMeta.color}35`
+                                                                border: `1px solid ${hslWithAlpha(catMeta.color, 0.35)}`
                                                             }}
                                                         >
                                                             {catMeta.emoji} {catMeta.shortLabel}
@@ -717,9 +723,9 @@ export const HabitTracker = ({ tasks, users, onToggleDate, onAdd, onUpdate, onDe
                                                             <span
                                                                 className="user-tag"
                                                                 style={{
-                                                                    backgroundColor: `${assignedUser.color}20`,
+                                                                    backgroundColor: hslWithAlpha(assignedUser.color, 0.16),
                                                                     color: assignedUser.color,
-                                                                    border: `1px solid ${assignedUser.color}50`
+                                                                    border: `1px solid ${hslWithAlpha(assignedUser.color, 0.38)}`
                                                                 }}
                                                             >
                                                                 <span style={{ fontSize: '0.85rem' }}>{assignedUser.avatar || '👤'}</span> {assignedUser.name}

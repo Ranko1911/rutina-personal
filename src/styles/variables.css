@@ -10,6 +10,7 @@
   
   --color-bg-app: hsl(220, 20%, 97%);
   --color-bg-card: hsl(0, 0%, 100%);
+  --color-bg-muted: hsl(220, 15%, 93%);
   --color-text-main: hsl(220, 25%, 15%);
   --color-text-softer: hsl(220, 12%, 48%);
   --color-border: hsl(220, 15%, 88%);
@@ -17,6 +18,8 @@
   --color-success: hsl(152, 65%, 42%);
   --color-warning: hsl(35, 95%, 55%);
   --color-danger: hsl(354, 80%, 58%);
+  
+  color-scheme: light;
   
   /* Spacing */
   --spacing-xs: 0.25rem;
@@ -44,13 +47,15 @@
 .dark {
   --color-bg-app: hsl(225, 25%, 9%);
   --color-bg-card: hsl(225, 22%, 14%);
+  --color-bg-muted: hsl(225, 20%, 18%);
   --color-primary-light: hsl(var(--primary-hue), 50%, 22%);
   --color-primary-dark: hsl(var(--primary-hue), 80%, 75%);
   --color-text-main: hsl(220, 25%, 96%);
   --color-text-softer: hsl(220, 15%, 68%);
   --color-border: hsl(225, 18%, 22%);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
 }
 
 body, aside, .card, .matrix-card, .analytics-card, .kpi-card, .donut-card {

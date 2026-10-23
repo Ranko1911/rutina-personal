@@ -67,7 +67,15 @@ export const UserManagement = ({ users, onAddUser, onRemoveUser }) => {
                                 value={newName}
                                 onChange={e => setNewName(e.target.value)}
                                 placeholder="Ej: Lucas, Carla..."
-                                style={{ width: '100%', marginTop: '4px' }}
+                                style={{
+                                    width: '100%',
+                                    marginTop: '6px',
+                                    padding: '8px 12px',
+                                    background: 'var(--color-bg-app)',
+                                    color: 'var(--color-text-main)',
+                                    border: '1px solid var(--color-border)',
+                                    borderRadius: 'var(--radius-sm)'
+                                }}
                             />
                         </label>
 
@@ -77,7 +85,15 @@ export const UserManagement = ({ users, onAddUser, onRemoveUser }) => {
                                 value={newRole}
                                 onChange={e => setNewRole(e.target.value)}
                                 placeholder="Ej: Salud, Rutina diaria..."
-                                style={{ width: '100%', marginTop: '4px' }}
+                                style={{
+                                    width: '100%',
+                                    marginTop: '6px',
+                                    padding: '8px 12px',
+                                    background: 'var(--color-bg-app)',
+                                    color: 'var(--color-text-main)',
+                                    border: '1px solid var(--color-border)',
+                                    borderRadius: 'var(--radius-sm)'
+                                }}
                             />
                         </label>
                     </div>

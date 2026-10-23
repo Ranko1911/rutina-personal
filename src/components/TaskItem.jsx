@@ -1,7 +1,7 @@
 import React from 'react';
 import { Check, Clock, User } from 'lucide-react';
 import clsx from 'clsx';
-import { getCategoryMeta } from '../utils/categories';
+import { getCategoryMeta, hslWithAlpha } from '../utils/categories';
 
 export const TaskItem = ({ task, onToggle, users }) => {
     const assignedUser = users.find(u => u.id === task.assignedTo);
@@ -59,15 +59,24 @@ export const TaskItem = ({ task, onToggle, users }) => {
                         <span
                             className="category-badge"
                             style={{
-                                backgroundColor: `${catMeta.color}18`,
+                                backgroundColor: hslWithAlpha(catMeta.color, 0.16),
                                 color: catMeta.color,
-                                border: `1px solid ${catMeta.color}35`
+                                border: `1px solid ${hslWithAlpha(catMeta.color, 0.35)}`
                             }}
                         >
                             {catMeta.emoji} {catMeta.shortLabel}
                         </span>
                         {assignedUser && (
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', backgroundColor: `${assignedUser.color}20`, color: assignedUser.color, padding: '2px 8px', borderRadius: '10px' }}>
+                            <span style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                                backgroundColor: hslWithAlpha(assignedUser.color, 0.16),
+                                color: assignedUser.color,
+                                border: `1px solid ${hslWithAlpha(assignedUser.color, 0.35)}`,
+                                padding: '2px 8px',
+                                borderRadius: '10px'
+                            }}>
                                 <span>{assignedUser.avatar || '👤'}</span> {assignedUser.name}
                             </span>
                         )}

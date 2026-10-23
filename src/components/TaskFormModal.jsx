@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Check } from 'lucide-react';
-import { CATEGORY_LIST } from '../utils/categories';
+import { CATEGORY_LIST, hslWithAlpha } from '../utils/categories';
 
 export const TaskFormModal = ({ isOpen, onClose, onSave, taskToEdit = null, users = [] }) => {
     const [title, setTitle] = useState('');
@@ -113,7 +113,7 @@ export const TaskFormModal = ({ isOpen, onClose, onSave, taskToEdit = null, user
                                                 padding: '7px 10px',
                                                 borderRadius: 'var(--radius-sm)',
                                                 border: `1.5px solid ${isSelected ? cat.color : 'var(--color-border)'}`,
-                                                backgroundColor: isSelected ? `${cat.color}20` : 'var(--color-bg-card)',
+                                                backgroundColor: isSelected ? hslWithAlpha(cat.color, 0.2) : 'var(--color-bg-card)',
                                                 color: isSelected ? cat.color : 'var(--color-text-softer)',
                                                 fontWeight: isSelected ? 700 : 500,
                                                 fontSize: '0.82rem',
